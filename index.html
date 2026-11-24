@@ -86,16 +86,25 @@
         </div>
       </div>
 
-      <!-- User status indicator (shown when logged in) -->
-      <div id="header-user-status" class="hidden flex items-center space-x-3">
-        <div class="flex items-center space-x-2 text-sm text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 badge-pulse"></span>
-          <span class="font-medium text-slate-800">iron_man</span>
-          <span class="text-xs text-slate-400">| Provider</span>
+      <!-- Header Right: Hardware & User status -->
+      <div class="flex items-center space-x-3">
+        <!-- Live ESP32 RFID USB Hardware Status Badge -->
+        <div id="esp32-status-pill" class="flex items-center space-x-1.5 text-xs px-2.5 py-1.5 rounded-lg border bg-slate-100 text-slate-500 border-slate-200 transition-all">
+          <span id="esp32-indicator-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+          <span id="esp32-status-text" class="font-medium">ESP32: Searching...</span>
         </div>
-        <button onclick="handleLogout()" class="text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 px-2.5 py-1.5 rounded-md font-medium transition-colors border border-transparent hover:border-rose-200">
-          Sign out
-        </button>
+
+        <!-- User status indicator (shown when logged in) -->
+        <div id="header-user-status" class="hidden flex items-center space-x-3">
+          <div class="flex items-center space-x-2 text-sm text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 badge-pulse"></span>
+            <span class="font-medium text-slate-800">iron_man</span>
+            <span class="text-xs text-slate-400">| Provider</span>
+          </div>
+          <button onclick="handleLogout()" class="text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 px-2.5 py-1.5 rounded-md font-medium transition-colors border border-transparent hover:border-rose-200">
+            Sign out
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -449,15 +458,24 @@
               <p class="text-sm text-slate-500 mt-1">Scan wristband or input patient identification code</p>
             </div>
 
-            <!-- Demo Hint Pill -->
-            <div class="mb-5 p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs text-slate-600">
-              <div class="flex items-center space-x-2">
-                <span class="px-1.5 py-0.5 bg-teal-100 text-teal-800 font-semibold rounded">Valid Patient ID</span>
-                <span class="font-mono text-slate-900 font-bold">P001</span>
+            <!-- Demo & RFID Hint Pill -->
+            <div class="mb-5 p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs text-slate-600">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="px-1.5 py-0.5 bg-teal-100 text-teal-800 font-semibold rounded">Valid Patient ID</span>
+                  <span class="font-mono text-slate-900 font-bold">P001</span>
+                </div>
+                <button type="button" onclick="autoFillPatientId()" class="text-teal-600 font-semibold hover:text-teal-800 hover:underline">
+                  Use P001
+                </button>
               </div>
-              <button type="button" onclick="autoFillPatientId()" class="text-teal-600 font-semibold hover:text-teal-800 hover:underline">
-                Use P001
-              </button>
+              <div class="pt-1.5 border-t border-slate-200/70 flex items-center justify-between text-[11px] text-slate-500">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping"></span>
+                  <span>Tap RFID card on RC522 to auto-load file</span>
+                </span>
+                <span class="font-mono text-slate-400 text-[10px]" id="rfid-last-scan-pill">No scan yet</span>
+              </div>
             </div>
 
             ${errorHtml}
@@ -963,7 +981,115 @@
     // Initialize the app on load
     document.addEventListener('DOMContentLoaded', () => {
       renderApp();
+      initRFIDWebSocket();
     });
+
+    // -------------------------------------------------------------
+    // Live ESP32 RFID WebSocket Listener
+    // -------------------------------------------------------------
+    let rfidWs = null;
+    let esp32Connected = false;
+
+    function initRFIDWebSocket() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}`;
+
+      try {
+        rfidWs = new WebSocket(wsUrl);
+
+        rfidWs.onopen = () => {
+          console.log('Connected to HMS Hardware Bridge WebSocket');
+        };
+
+        rfidWs.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            handleHardwareEvent(data);
+          } catch (e) {
+            console.error('WebSocket parse error:', e);
+          }
+        };
+
+        rfidWs.onclose = () => {
+          updateESP32UI(false, null);
+          // Try reconnecting in 3 seconds
+          setTimeout(initRFIDWebSocket, 3000);
+        };
+
+        rfidWs.onerror = () => {
+          updateESP32UI(false, null);
+        };
+      } catch (err) {
+        console.warn('WebSocket unavailable:', err);
+      }
+    }
+
+    function updateESP32UI(connected, port) {
+      esp32Connected = connected;
+      const pill = document.getElementById('esp32-status-pill');
+      const dot = document.getElementById('esp32-indicator-dot');
+      const text = document.getElementById('esp32-status-text');
+
+      if (!pill || !dot || !text) return;
+
+      if (connected) {
+        pill.className = 'flex items-center space-x-1.5 text-xs px-2.5 py-1.5 rounded-lg border bg-emerald-50 text-emerald-800 border-emerald-200 transition-all';
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-500 badge-pulse';
+        text.textContent = `ESP32: Connected (${port || 'USB'})`;
+      } else {
+        pill.className = 'flex items-center space-x-1.5 text-xs px-2.5 py-1.5 rounded-lg border bg-slate-100 text-slate-500 border-slate-200 transition-all';
+        dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+        text.textContent = 'ESP32: Disconnected';
+      }
+    }
+
+    function handleHardwareEvent(data) {
+      if (data.type === 'STATUS') {
+        updateESP32UI(data.connected, data.port);
+      } else if (data.type === 'RFID_SCAN') {
+        onRFIDCardScanned(data.patientId, data.uid);
+      }
+    }
+
+    function onRFIDCardScanned(patientId, cardUID) {
+      console.log(`[RFID] Scanned UID: ${cardUID} -> Patient: ${patientId}`);
+
+      const scanPill = document.getElementById('rfid-last-scan-pill');
+      if (scanPill) {
+        scanPill.textContent = `Scanned UID: ${cardUID}`;
+        scanPill.classList.add('text-teal-600', 'font-bold');
+      }
+
+      // If user is not logged in yet, auto log them in with provider credentials first
+      if (!state.user) {
+        state.user = { username: MOCK_CONFIG.auth.username };
+      }
+
+      // Transition to lookup screen if not already there or consent screen
+      if (state.currentScreen === 'login') {
+        state.currentScreen = 'lookup';
+        renderApp();
+      }
+
+      // Populate input field
+      const input = document.getElementById('patientId');
+      if (input) {
+        input.value = patientId;
+        input.classList.add('ring-4', 'ring-teal-400');
+        setTimeout(() => {
+          input.classList.remove('ring-4', 'ring-teal-400');
+          // Automatically advance lookup
+          const form = document.getElementById('lookup-form');
+          if (form) form.requestSubmit();
+        }, 300);
+      } else {
+        // Direct state advance if in another view
+        state.patientIdInput = patientId;
+        state.validatedPatientId = patientId;
+        state.currentScreen = 'consent';
+        renderApp();
+      }
+    }
   </script>
 </body>
 </html>
