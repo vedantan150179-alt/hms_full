@@ -11,6 +11,8 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <!-- Babel Standalone for JSX parsing -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- jsPDF for Direct 1-Page Text PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -66,6 +68,30 @@
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
+      body.printing-one-page * {
+        visibility: hidden !important;
+      }
+      body.printing-one-page #one-page-report-sheet,
+      body.printing-one-page #one-page-report-sheet * {
+        visibility: visible !important;
+      }
+      body.printing-one-page #one-page-report-sheet {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
     }
   </style>
 </head>
@@ -2075,10 +2101,378 @@
     // 6. PATIENT MEDICAL RECORD — EMR DASHBOARD (With Document Switcher & Dual Records)
     // ==========================================
     function PatientEMRDashboard({ patientId, record, user, onEditPatient, onDeletePatient, onAddDocument, onRemoveDocument, onBackToLookup, onBackToDashboard }) {
-      // Document Switcher State: 'DOC-POST' | 'DOC-PRE' | or custom uploaded documentId
+      // Document Switcher State: 'DOC-POST' | 'DOC-PRE' | 'DOC-FULL-REPORT' | or custom uploaded documentId
       const [selectedDocId, setSelectedDocId] = useState("DOC-POST");
       const [showUploadModal, setShowUploadModal] = useState(false);
       const [isDragging, setIsDragging] = useState(false);
+      const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+      const reportSheetRef = React.useRef(null);
+
+      // Direct 1-Page PDF Download Helper (jsPDF clean clinical layout)
+      const downloadOnePagePdf = () => {
+        if (!record) return;
+        const jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+        if (!jsPDFCtor) {
+          document.body.classList.add("printing-one-page");
+          window.print();
+          setTimeout(() => document.body.classList.remove("printing-one-page"), 500);
+          return;
+        }
+        setIsGeneratingPdf(true);
+        try {
+          const doc = new jsPDFCtor({ unit: "mm", format: "a4", orientation: "portrait" });
+          const pageW = 210;
+          const margin = 14;
+          const contentW = pageW - margin * 2; // 182mm
+          const accentRGB = [153, 27, 27]; // Deep clinical crimson
+          const darkRGB = [15, 23, 42];
+          const bodyRGB = [51, 65, 85];
+          const mutedRGB = [100, 116, 139];
+          let y = 15;
+
+          const writeWrapped = (text, x, currY, maxW, lineH = 4.2, maxLines = 12) => {
+            const rawLines = doc.splitTextToSize(String(text || "-"), maxW);
+            const lines = rawLines.slice(0, maxLines);
+            doc.text(lines, x, currY);
+            return currY + lines.length * lineH;
+          };
+
+          const drawSectionHeader = (title) => {
+            doc.setFillColor(254, 242, 242);
+            doc.rect(margin, y, contentW, 6.2, "F");
+            doc.setFillColor(...accentRGB);
+            doc.rect(margin, y, 1.5, 6.2, "F");
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(...accentRGB);
+            doc.text(title, margin + 4, y + 4.3, { charSpace: 0.7 });
+            y += 9.5;
+          };
+
+          const drawField = (label, value, x, currY, maxW = 55) => {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(6.8);
+            doc.setTextColor(...mutedRGB);
+            doc.text(String(label).toUpperCase(), x, currY, { charSpace: 0.4 });
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(...darkRGB);
+            const valLines = doc.splitTextToSize(String(value || "-"), maxW).slice(0, 2);
+            doc.text(valLines, x, currY + 4);
+            return currY + 4 + valLines.length * 3.8;
+          };
+
+          // 1. Hospital Logo + Brand Header
+          // Blue rounded medical cross badge
+          doc.setFillColor(37, 99, 235);
+          doc.roundedRect(margin, y - 3, 11, 11, 2, 2, "F");
+          doc.setFillColor(255, 255, 255);
+          doc.rect(margin + 4.6, y - 0.6, 1.8, 6.2, "F"); // vertical bar of +
+          doc.rect(margin + 2.4, y + 1.6, 6.2, 1.8, "F"); // horizontal bar of +
+
+          // Hospital Name & Subtitle next to logo
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(13);
+          doc.setTextColor(...darkRGB);
+          doc.text("PulseCare HMS", margin + 14, y + 1.5);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.2);
+          doc.setTextColor(37, 99, 235);
+          doc.text("HOSPITAL MANAGEMENT & CLINICAL RECORDS", margin + 14, y + 5.5, { charSpace: 0.5 });
+
+          // Right-aligned confidentiality badge
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.5);
+          doc.setTextColor(...accentRGB);
+          doc.text("CONFIDENTIAL  -  CLINICAL RECORD", pageW - margin, y + 1.5, { align: "right", charSpace: 0.6 });
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(7.5);
+          doc.setTextColor(...mutedRGB);
+          doc.text(post?.facility || pre?.facility || "PulseCare Clinical Hospital", pageW - margin, y + 5.5, { align: "right" });
+          y += 12.5;
+
+          // Main Report Title
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(19);
+          doc.setTextColor(...darkRGB);
+          doc.text("Patient Medical Report", margin, y);
+          y += 5;
+
+          doc.setFont("helvetica", "italic");
+          doc.setFontSize(8.5);
+          doc.setTextColor(...mutedRGB);
+          doc.text("Consolidated clinical summary for medical review and care handoff.", margin, y);
+          y += 5;
+
+          // 2. Highlighted Report ID & Patient Banner
+          doc.setFillColor(239, 246, 255);
+          doc.setDrawColor(191, 219, 254);
+          doc.setLineWidth(0.3);
+          doc.rect(margin, y, contentW, 9, "FD");
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.5);
+          doc.setTextColor(30, 64, 175);
+          doc.text("REPORT ID:", margin + 3, y + 5.7, { charSpace: 0.4 });
+          doc.setFontSize(8.8);
+          doc.setTextColor(...darkRGB);
+          doc.text(String(record.id || "N/A"), margin + 23, y + 5.7);
+
+          const genDate = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+          doc.setFontSize(8.2);
+          doc.setTextColor(...darkRGB);
+          doc.text(genDate, pageW - margin - 3, y + 5.7, { align: "right" });
+          doc.setFontSize(7.5);
+          doc.setTextColor(30, 64, 175);
+          doc.text("GENERATED:", pageW - margin - 38, y + 5.7, { align: "right", charSpace: 0.4 });
+          y += 13;
+
+          // 3. Patient Heading & Information Section
+          drawSectionHeader("PATIENT INFORMATION");
+          // Highlighted Patient Name & Blood Group row
+          doc.setFillColor(248, 250, 252);
+          doc.rect(margin, y - 2.5, contentW, 9.5, "F");
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7);
+          doc.setTextColor(...mutedRGB);
+          doc.text("PATIENT NAME", margin + 2, y + 0.5, { charSpace: 0.4 });
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(11.5);
+          doc.setTextColor(...darkRGB);
+          doc.text(String(record.name || "Unknown Patient"), margin + 2, y + 5.3);
+
+          // Highlighted Blood Group pill on right
+          doc.setFillColor(254, 226, 226);
+          doc.roundedRect(pageW - margin - 46, y - 0.8, 44, 6.5, 1.5, 1.5, "F");
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8.2);
+          doc.setTextColor(...accentRGB);
+          doc.text(`BLOOD: ${record.bloodGroup || "-"}`, pageW - margin - 24, y + 3.5, { align: "center" });
+          y += 10.5;
+
+          const row1Bottom = Math.max(
+            drawField("Patient ID / MRN", record.id, margin, y, 42),
+            drawField("Age / Sex", `${record.age || "-"} / ${record.sex || "-"}`, margin + 45, y, 36),
+            drawField("Date of Birth", record.dob || "-", margin + 84, y, 36),
+            drawField("Contact", record.contact || "N/A", margin + 123, y, 30),
+            drawField("Status", "Discharged", margin + 155, y, 27)
+          );
+          y = row1Bottom + 4.5;
+
+          // 4. Allergies & Active Conditions
+          drawSectionHeader("ALLERGIES & ACTIVE CONDITIONS");
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8.2);
+          doc.setTextColor(...darkRGB);
+          doc.text("Documented Allergies", margin, y);
+          y += 4;
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.setTextColor(...bodyRGB);
+          const allergyText = (record.allergies && record.allergies.length > 0)
+            ? record.allergies.map(a => `${a.name} (${a.severity}) - ${a.reaction}`).join("; ")
+            : "No known drug allergies documented.";
+          y = writeWrapped(allergyText, margin, y, contentW, 4.2, 3) + 2;
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8.2);
+          doc.setTextColor(...darkRGB);
+          doc.text("Active Clinical Conditions", margin, y);
+          y += 4;
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.setTextColor(...bodyRGB);
+          const condText = (record.currentConditions && record.currentConditions.length > 0)
+            ? record.currentConditions.map(c => `- ${c}`).join("\n")
+            : "None documented.";
+          y = writeWrapped(condText, margin, y, contentW, 4.2, 4) + 4;
+
+          // 5. Latest Vitals Grid (3 columns)
+          if (record.vitals && record.vitals.length > 0) {
+            drawSectionHeader("LATEST RECORDED VITALS");
+            const colW = contentW / 3;
+            const vitalsToShow = record.vitals.slice(0, 6);
+            vitalsToShow.forEach((v, idx) => {
+              const col = idx % 3;
+              const row = Math.floor(idx / 3);
+              const vx = margin + col * colW;
+              const vy = y + row * 10;
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(6.8);
+              doc.setTextColor(...mutedRGB);
+              doc.text(String(v.name || "").toUpperCase(), vx, vy, { charSpace: 0.3 });
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(9);
+              doc.setTextColor(...darkRGB);
+              doc.text(`${v.value || "-"}`, vx, vy + 4);
+              doc.setFont("helvetica", "normal");
+              doc.setFontSize(7.5);
+              doc.setTextColor(...mutedRGB);
+              doc.text(String(v.status || ""), vx + 22, vy + 4);
+            });
+            y += Math.ceil(vitalsToShow.length / 3) * 10 + 3;
+          }
+
+          // 6. Two-Column Clinical Summary (Post-Accident vs Pre-Accident & Follow-Up)
+          const colGap = 10;
+          const halfW = (contentW - colGap) / 2;
+          const leftX = margin;
+          const rightX = margin + halfW + colGap;
+          const colStartY = y;
+
+          // Left Column Header (Bold & Highlighted)
+          doc.setFillColor(254, 242, 242);
+          doc.rect(leftX, colStartY, halfW, 6, "F");
+          doc.setFillColor(...accentRGB);
+          doc.rect(leftX, colStartY, 1.5, 6, "F");
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8.8);
+          doc.setTextColor(...accentRGB);
+          doc.text("POST-ACCIDENT / INPATIENT", leftX + 3.5, colStartY + 4.2, { charSpace: 0.6 });
+
+          // Right Column Header (Bold & Highlighted)
+          doc.setFillColor(239, 246, 255);
+          doc.rect(rightX, colStartY, halfW, 6, "F");
+          doc.setFillColor(37, 99, 235);
+          doc.rect(rightX, colStartY, 1.5, 6, "F");
+          doc.setTextColor(30, 64, 175);
+          doc.text("BASELINE & FOLLOW-UP", rightX + 3.5, colStartY + 4.2, { charSpace: 0.6 });
+
+          let ly = colStartY + 9.5;
+          let ry = colStartY + 9.5;
+          const maxColY = 250;
+
+          doc.setFontSize(8.2);
+          doc.setTextColor(...bodyRGB);
+
+          if (post) {
+            if (post.diagnosis?.primary && ly < maxColY) {
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(...darkRGB);
+              doc.text("Primary Diagnosis:", leftX, ly);
+              ly += 3.8;
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(...bodyRGB);
+              ly = writeWrapped(post.diagnosis.primary, leftX, ly, halfW, 4.0, 3) + 2;
+            }
+            if (post.treatment?.procedure && ly < maxColY) {
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(...darkRGB);
+              doc.text(`Procedure (${post.treatment.procedureDate || "Inpatient"}):`, leftX, ly);
+              ly += 3.8;
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(...bodyRGB);
+              ly = writeWrapped(post.treatment.procedure, leftX, ly, halfW, 4.0, 3) + 2;
+            }
+            if (post.dischargeCondition?.summary && ly < maxColY) {
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(...darkRGB);
+              doc.text(`Discharge (${post.dischargeCondition.date || "Recent"}):`, leftX, ly);
+              ly += 3.8;
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(...bodyRGB);
+              ly = writeWrapped(post.dischargeCondition.summary, leftX, ly, halfW, 4.0, 4) + 2;
+            }
+            if (post.dischargeMeds && post.dischargeMeds.length > 0 && ly < maxColY) {
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(...darkRGB);
+              doc.text("Discharge Medications:", leftX, ly);
+              ly += 3.8;
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(...bodyRGB);
+              for (const m of post.dischargeMeds.slice(0, 4)) {
+                if (ly >= maxColY) break;
+                ly = writeWrapped(`- ${m.medication} (${m.dose})`, leftX, ly, halfW, 3.8, 2);
+              }
+            }
+          } else {
+            doc.setFont("helvetica", "normal");
+            ly = writeWrapped("No inpatient/emergency encounter recorded.", leftX, ly, halfW, 4.0, 2);
+          }
+
+          if (pre) {
+            if (pre.medicalHistory?.knownCondition && ry < maxColY) {
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(...darkRGB);
+              doc.text(`Pre-Accident History (${pre.encounterDate || ""}):`, rightX, ry);
+              ry += 3.8;
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(...bodyRGB);
+              ry = writeWrapped(pre.medicalHistory.knownCondition, rightX, ry, halfW, 4.0, 3) + 2;
+            }
+            if (pre.currentMedications && pre.currentMedications.length > 0 && ry < maxColY) {
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(...darkRGB);
+              doc.text("Baseline Medications:", rightX, ry);
+              ry += 3.8;
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(...bodyRGB);
+              for (const m of pre.currentMedications.slice(0, 3)) {
+                if (ry >= maxColY) break;
+                ry = writeWrapped(`- ${m.medication} ${m.dosage} (${m.frequency})`, rightX, ry, halfW, 3.8, 2);
+              }
+              ry += 2;
+            }
+          }
+
+          if (post?.followUp && post.followUp.length > 0 && ry < maxColY) {
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(...darkRGB);
+            doc.text("Follow-Up Instructions:", rightX, ry);
+            ry += 3.8;
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(...bodyRGB);
+            for (const item of post.followUp.slice(0, 4)) {
+              if (ry >= maxColY) break;
+              ry = writeWrapped(`- ${item}`, rightX, ry, halfW, 3.8, 2);
+            }
+          }
+
+          // 7. Signature Block & Footer
+          const sigY = 266;
+          doc.setDrawColor(148, 163, 184);
+          doc.setLineWidth(0.3);
+          doc.line(leftX, sigY, leftX + 72, sigY);
+          doc.line(rightX, sigY, rightX + 72, sigY);
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8.5);
+          doc.setTextColor(...darkRGB);
+          doc.text(post?.attendingSurgeon || pre?.physician || "Attending Physician", leftX, sigY + 4.5);
+          doc.text(post?.electronicSignature || pre?.electronicSignature || "PULSECARE-EMR-VERIFIED", rightX, sigY + 4.5);
+
+          doc.setFont("helvetica", "italic");
+          doc.setFontSize(7.5);
+          doc.setTextColor(...mutedRGB);
+          doc.text("Attending Clinician / Surgeon", leftX, sigY + 8.5);
+          doc.text("Electronic Verification Signature", rightX, sigY + 8.5);
+
+          const footerY = 285;
+          doc.setDrawColor(226, 232, 240);
+          doc.line(margin, footerY - 4, pageW - margin, footerY - 4);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(7.5);
+          doc.setTextColor(...mutedRGB);
+          doc.text("PulseCare HMS Patient Report  -  CONFIDENTIAL  -  For clinical use only", margin, footerY);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(...accentRGB);
+          doc.text(`${record.id || "PATIENT"}  |  Page 1 of 1`, pageW - margin, footerY, { align: "right" });
+
+          doc.save(`${record.id || "PATIENT"}_Full_Report.pdf`);
+        } catch (err) {
+          console.error("PDF generation failed, falling back to print:", err);
+          document.body.classList.add("printing-one-page");
+          window.print();
+          setTimeout(() => document.body.classList.remove("printing-one-page"), 500);
+        } finally {
+          setIsGeneratingPdf(false);
+        }
+      };
+
+      const printOnePageReport = () => {
+        document.body.classList.add("printing-one-page");
+        window.print();
+        setTimeout(() => document.body.classList.remove("printing-one-page"), 500);
+      };
 
       // Gemini Clinical AI Layer State
       const [aiAnalysis, setAiAnalysis] = useState(null);
@@ -2226,6 +2620,17 @@
                   </button>
                 </div>
               )}
+
+              <button
+                onClick={() => setSelectedDocId("DOC-FULL-REPORT")}
+                className={'text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 transition-all ' +
+                  (selectedDocId === "DOC-FULL-REPORT"
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200')}
+              >
+                <span>📋</span>
+                <span>1-Page Report / PDF</span>
+              </button>
 
               <button
                 onClick={() => setShowUploadModal(true)}
@@ -2568,6 +2973,21 @@
 
             {/* Scrollable Tab Row */}
             <div className="flex items-center space-x-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
+              {/* Tab 0: Full 1-Page Consolidated Clinical Report */}
+              <div className="relative group flex items-center">
+                <button
+                  onClick={() => setSelectedDocId("DOC-FULL-REPORT")}
+                  className={'flex items-center space-x-2 px-3.5 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap ' + 
+                    (selectedDocId === "DOC-FULL-REPORT" 
+                      ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20' 
+                      : 'text-indigo-700 bg-indigo-50/70 hover:bg-indigo-100 border border-indigo-200')}
+                >
+                  <span>📋</span>
+                  <span>Full 1-Page Report</span>
+                  <span className="text-[10px] opacity-80">(PDF)</span>
+                </button>
+              </div>
+
               {/* Tab 1: Post-Accident (if present) */}
               {hasPost && (
                 <div className="relative group flex items-center">
@@ -2660,6 +3080,246 @@
               ))}
             </div>
           </div>
+
+          {/* VIEW 0: FULL 1-PAGE CONSOLIDATED REPORT & PDF EXPORT */}
+          {selectedDocId === "DOC-FULL-REPORT" && (
+            <div className="space-y-4 screen-fade">
+              {/* Report Action Banner */}
+              <div className="p-4 bg-gradient-to-r from-slate-900 to-indigo-900 text-white rounded-2xl border border-slate-700 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs shadow-md">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="bg-indigo-500 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded">1-Page Clinical Summary</span>
+                    <h2 className="text-base font-bold">Consolidated Patient Medical Report</h2>
+                  </div>
+                  <p className="text-slate-300 mt-0.5">
+                    Formatted for single-page A4 clinical handoff &bull; Patient: <strong className="text-white">{record.name} ({record.id})</strong>
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={downloadOnePagePdf}
+                    disabled={isGeneratingPdf}
+                    className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-60 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <span>{isGeneratingPdf ? "⏳" : "⬇️"}</span>
+                    <span>{isGeneratingPdf ? "Generating PDF..." : "Download PDF"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={printOnePageReport}
+                    className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <span>🖨️</span>
+                    <span>Print / Save PDF</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* A4 Single-Page Report Sheet */}
+              <div className="overflow-x-auto pb-4">
+                <div
+                  id="one-page-report-sheet"
+                  ref={reportSheetRef}
+                  className="mx-auto bg-white text-slate-900 border border-slate-300 shadow-lg rounded-xl p-5 space-y-3 text-[11px] leading-snug"
+                  style={{ width: "100%", maxWidth: "210mm", boxSizing: "border-box" }}
+                >
+                  {/* 1. Header */}
+                  <div className="flex items-start justify-between border-b-2 border-slate-900 pb-2.5">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-base font-black tracking-tight text-slate-900">PulseCare HMS</span>
+                        <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-slate-900 text-white">One-Page Clinical Report</span>
+                      </div>
+                      <p className="text-[10px] text-slate-500 mt-0.5">
+                        {post?.facility || pre?.facility || "PulseCare Clinical Hospital"} &bull; Consolidated EMR Summary
+                      </p>
+                    </div>
+                    <div className="text-right font-mono text-[10px] text-slate-600">
+                      <div className="font-bold text-slate-900">ID: {record.id}</div>
+                      <div>Generated: {new Date().toLocaleDateString()} {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                  </div>
+
+                  {/* 2. Patient Demographics & Status */}
+                  <div className="grid grid-cols-4 gap-2 bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block">Patient Name</span>
+                      <span className="font-bold text-slate-900 text-xs">{record.name}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block">Age / Sex / DOB</span>
+                      <span className="font-semibold text-slate-800">{record.age} / {record.sex}</span>
+                      <span className="block text-[9px] text-slate-500">DOB: {record.dob}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block">Blood Group & Contact</span>
+                      <span className="font-bold text-rose-700">{record.bloodGroup}</span>
+                      <span className="block text-[9px] text-slate-500">{record.contact || "N/A"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block">Location & Status</span>
+                      <span className="font-semibold text-slate-800 block truncate">{record.location || "India"}</span>
+                      <span className="text-[9px] font-bold text-emerald-700">Discharged / Follow-up Active</span>
+                    </div>
+                  </div>
+
+                  {/* 3. Allergies & Active Conditions */}
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div className="border border-rose-200 bg-rose-50/40 rounded-lg p-2">
+                      <span className="text-[9px] uppercase font-bold text-rose-800 block mb-1">Documented Allergies</span>
+                      {record.allergies && record.allergies.length > 0 ? (
+                        <ul className="space-y-0.5">
+                          {record.allergies.map((a, i) => (
+                            <li key={i} className="text-[10px]">
+                              <strong className="text-slate-900">{a.name}</strong> ({a.severity}) — <span className="text-slate-600">{a.reaction}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span className="text-[10px] text-slate-500">None documented</span>
+                      )}
+                    </div>
+                    <div className="border border-blue-200 bg-blue-50/40 rounded-lg p-2">
+                      <span className="text-[9px] uppercase font-bold text-blue-800 block mb-1">Active Clinical Conditions</span>
+                      {record.currentConditions && record.currentConditions.length > 0 ? (
+                        <ul className="list-disc list-inside space-y-0.5 text-[10px] text-slate-800">
+                          {record.currentConditions.map((c, i) => (
+                            <li key={i}>{c}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span className="text-[10px] text-slate-500">None documented</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 4. Current Vitals Strip */}
+                  {record.vitals && record.vitals.length > 0 && (
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-500 block mb-1">Latest Recorded Vitals</span>
+                      <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                        {record.vitals.map((v, i) => (
+                          <div key={i} className="border border-slate-200 rounded-md p-1.5 bg-slate-50/70 text-center">
+                            <div className="text-[9px] text-slate-500 truncate">{v.name}</div>
+                            <div className="font-bold text-slate-900 text-[11px]">{v.value}</div>
+                            <div className="text-[8px] text-emerald-700 font-semibold truncate">{v.status}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 5. AI Clinical Priority (if available) */}
+                  {aiAnalysis && (
+                    <div className="border border-indigo-200 bg-indigo-50/40 rounded-lg p-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[9px] uppercase font-bold text-indigo-800">AI Clinical Intelligence Summary</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-indigo-600 text-white">
+                          Priority: {aiAnalysis.patientPriority?.level} &bull; {aiAnalysis.patientPriority?.urgencyScore}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-slate-700">{aiAnalysis.patientPriority?.rationale}</p>
+                    </div>
+                  )}
+
+                  {/* 6. Post-Accident & Pre-Accident Clinical Summary */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                    {/* Post-Accident / Emergency Summary */}
+                    {post && (
+                      <div className="border border-slate-200 rounded-lg p-2.5 space-y-1.5">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-1">
+                          <span className="text-[10px] font-bold uppercase text-rose-700">Post-Accident / Inpatient Summary</span>
+                          <span className="text-[9px] text-slate-500">{post.encounterDates}</span>
+                        </div>
+                        {post.diagnosis && (
+                          <div className="text-[10px]">
+                            <strong className="text-slate-800">Primary Dx:</strong> {post.diagnosis.primary}
+                          </div>
+                        )}
+                        {post.treatment && (
+                          <div className="text-[10px]">
+                            <strong className="text-slate-800">Procedure ({post.treatment.procedureDate}):</strong> {post.treatment.procedure}
+                          </div>
+                        )}
+                        {post.dischargeCondition && (
+                          <div className="text-[10px]">
+                            <strong className="text-slate-800">Discharge ({post.dischargeCondition.date}):</strong> {post.dischargeCondition.summary}
+                          </div>
+                        )}
+                        {post.dischargeMeds && post.dischargeMeds.length > 0 && (
+                          <div className="pt-1 border-t border-slate-100">
+                            <span className="text-[9px] font-bold uppercase text-slate-500 block">Discharge Medications:</span>
+                            <ul className="list-disc list-inside text-[9.5px] text-slate-700">
+                              {post.dischargeMeds.map((m, i) => (
+                                <li key={i}><strong>{m.medication}</strong> — {m.dose} ({m.purpose})</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Pre-Accident Baseline Summary */}
+                    {pre && (
+                      <div className="border border-slate-200 rounded-lg p-2.5 space-y-1.5">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-1">
+                          <span className="text-[10px] font-bold uppercase text-blue-700">Pre-Accident Baseline</span>
+                          <span className="text-[9px] text-slate-500">{pre.encounterDate}</span>
+                        </div>
+                        {pre.medicalHistory && (
+                          <div className="text-[10px]">
+                            <strong className="text-slate-800">Known History:</strong> {pre.medicalHistory.knownCondition}
+                          </div>
+                        )}
+                        {pre.cardiacAssessment && (
+                          <div className="text-[10px]">
+                            <strong className="text-slate-800">Cardiac Baseline:</strong> {pre.cardiacAssessment.ecg} {pre.cardiacAssessment.echo}
+                          </div>
+                        )}
+                        {pre.clinicalAssessment && (
+                          <div className="text-[10px]">
+                            <strong className="text-slate-800">Assessment:</strong> {pre.clinicalAssessment}
+                          </div>
+                        )}
+                        {pre.currentMedications && pre.currentMedications.length > 0 && (
+                          <div className="pt-1 border-t border-slate-100">
+                            <span className="text-[9px] font-bold uppercase text-slate-500 block">Baseline Medications:</span>
+                            <ul className="list-disc list-inside text-[9.5px] text-slate-700">
+                              {pre.currentMedications.map((m, i) => (
+                                <li key={i}><strong>{m.medication}</strong> {m.dosage} ({m.frequency})</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 7. Follow-up & Footer */}
+                  {post?.followUp && post.followUp.length > 0 && (
+                    <div className="border border-slate-200 bg-slate-50 rounded-lg p-2">
+                      <span className="text-[9px] uppercase font-bold text-slate-600 block mb-0.5">Follow-Up & Discharge Instructions</span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-0.5 text-[9.5px] text-slate-700">
+                        {post.followUp.slice(0, 6).map((f, i) => (
+                          <div key={i}>&bull; {f}</div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-200 text-[9px] text-slate-500">
+                    <div>
+                      Attending: <strong className="text-slate-700">{post?.attendingSurgeon || pre?.physician || "Attending Physician"}</strong>
+                    </div>
+                    <div className="font-mono">
+                      Verified: {post?.electronicSignature || pre?.electronicSignature || "PULSECARE-EMR"} &bull; Page 1 of 1
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* VIEW 3: UPLOADED DOCUMENT VIEW */}
           {currentUploadedDoc && (
