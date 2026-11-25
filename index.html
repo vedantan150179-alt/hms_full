@@ -2104,9 +2104,320 @@
       // Document Switcher State: 'DOC-POST' | 'DOC-PRE' | 'DOC-FULL-REPORT' | or custom uploaded documentId
       const [selectedDocId, setSelectedDocId] = useState("DOC-POST");
       const [showUploadModal, setShowUploadModal] = useState(false);
+      const [uploadCategory, setUploadCategory] = useState("xray");
       const [isDragging, setIsDragging] = useState(false);
       const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+      const [diagPdfError, setDiagPdfError] = useState("");
+      const [zoomedImage, setZoomedImage] = useState(null);
       const reportSheetRef = React.useRef(null);
+
+      // Compute lab/vital status dynamically from value vs referenceRange (never hardcoded)
+      const computeLabStatus = (value, referenceRange) => {
+        if (!referenceRange || typeof referenceRange !== "string" || !referenceRange.includes("-")) {
+          return null;
+        }
+        const num = parseFloat(String(value).replace(/,/g, "").trim());
+        const parts = referenceRange.split("-").map(s => parseFloat(s.trim()));
+        if (isNaN(num) || parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) {
+          return null;
+        }
+        const [low, high] = parts;
+        const span = Math.max(high - low, 0.1);
+        if (num >= low && num <= high) {
+          return {
+            label: "Normal",
+            level: "normal",
+            badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-200"
+          };
+        }
+        const deviation = num < low ? (low - num) / span : (num - high) / span;
+        if (deviation >= 0.35) {
+          return {
+            label: num < low ? "Critical Low" : "Critical High",
+            level: "critical",
+            badgeClass: "bg-rose-100 text-rose-800 border-rose-300"
+          };
+        }
+        return {
+          label: num < low ? "Low" : "High",
+          level: "abnormal",
+          badgeClass: "bg-amber-100 text-amber-800 border-amber-200"
+        };
+      };
+
+      // Shared jsPDF Diagnostic Report Generator (used by X-Ray, Blood, and Cardiac PDF buttons)
+      const generateDiagnosticPdf = ({ reportTitle, reportSubtitle, filename, infoBlocks = [], tables = [] }) => {
+        setDiagPdfError("");
+        if (!record) return;
+        const jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+        if (!jsPDFCtor) {
+          setDiagPdfError("PDF library (jsPDF) is not loaded. Please check your internet connection and refresh.");
+          return;
+        }
+        try {
+          const doc = new jsPDFCtor({ unit: "mm", format: "a4", orientation: "portrait" });
+          const pageW = 210;
+          const pageH = 297;
+          const margin = 14;
+          const contentW = pageW - margin * 2;
+          const accentRGB = [153, 27, 27];
+          const darkRGB = [15, 23, 42];
+          const bodyRGB = [51, 65, 85];
+          const mutedRGB = [100, 116, 139];
+          let y = 15;
+          const genTimestamp = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+
+          const drawHeader = () => {
+            // PulseCare HMS Blue + Logo
+            doc.setFillColor(37, 99, 235);
+            doc.roundedRect(margin, y - 3, 11, 11, 2, 2, "F");
+            doc.setFillColor(255, 255, 255);
+            doc.rect(margin + 4.6, y - 0.6, 1.8, 6.2, "F");
+            doc.rect(margin + 2.4, y + 1.6, 6.2, 1.8, "F");
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(13);
+            doc.setTextColor(...darkRGB);
+            doc.text("PulseCare HMS", margin + 14, y + 1.5);
+            doc.setFontSize(7.2);
+            doc.setTextColor(37, 99, 235);
+            doc.text("HOSPITAL MANAGEMENT & DIAGNOSTIC REPORTS", margin + 14, y + 5.5, { charSpace: 0.4 });
+
+            doc.setFontSize(7.5);
+            doc.setTextColor(...accentRGB);
+            doc.text("CONFIDENTIAL  -  DIAGNOSTIC REPORT", pageW - margin, y + 1.5, { align: "right", charSpace: 0.5 });
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(...mutedRGB);
+            doc.text(post?.facility || pre?.facility || "PulseCare Clinical Hospital", pageW - margin, y + 5.5, { align: "right" });
+            y += 12;
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(17);
+            doc.setTextColor(...darkRGB);
+            doc.text(reportTitle, margin, y);
+            y += 5;
+            if (reportSubtitle) {
+              doc.setFont("helvetica", "italic");
+              doc.setFontSize(8.5);
+              doc.setTextColor(...mutedRGB);
+              doc.text(reportSubtitle, margin, y);
+              y += 5;
+            }
+
+            // Patient Info Strip
+            doc.setFillColor(239, 246, 255);
+            doc.setDrawColor(191, 219, 254);
+            doc.setLineWidth(0.3);
+            doc.rect(margin, y, contentW, 12, "FD");
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(...darkRGB);
+            doc.text(`${record.name || "Unknown"} (${record.id || "N/A"})`, margin + 3, y + 4.8);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(7.8);
+            doc.setTextColor(...bodyRGB);
+            doc.text(`Age/Sex: ${record.age || "-"} / ${record.sex || "-"}   |   Blood Group: ${record.bloodGroup || "-"}`, margin + 3, y + 9.4);
+            doc.text(`Date: ${genTimestamp}`, pageW - margin - 3, y + 4.8, { align: "right" });
+            y += 16;
+          };
+
+          const ensureSpace = (needed = 14) => {
+            if (y + needed > pageH - 22) {
+              doc.addPage();
+              y = 16;
+            }
+          };
+
+          const drawSectionTitle = (secTitle) => {
+            ensureSpace(12);
+            doc.setFillColor(254, 242, 242);
+            doc.rect(margin, y, contentW, 6, "F");
+            doc.setFillColor(...accentRGB);
+            doc.rect(margin, y, 1.5, 6, "F");
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(8.8);
+            doc.setTextColor(...accentRGB);
+            doc.text(secTitle.toUpperCase(), margin + 4, y + 4.2, { charSpace: 0.6 });
+            y += 9;
+          };
+
+          drawHeader();
+
+          // Info Blocks (key-value narrative blocks)
+          infoBlocks.forEach((blk) => {
+            drawSectionTitle(blk.heading);
+            (blk.rows || []).forEach((r) => {
+              ensureSpace(10);
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(8.2);
+              doc.setTextColor(...darkRGB);
+              doc.text(`${r.label}:`, margin + 1, y);
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(...bodyRGB);
+              const wrapped = doc.splitTextToSize(String(r.value || "-"), contentW - 36);
+              doc.text(wrapped, margin + 35, y);
+              y += Math.max(4.5, wrapped.length * 4.1) + 1;
+            });
+            y += 2;
+          });
+
+          // Reusable Parameter / Value / Unit / ReferenceRange / Status Table Renderer
+          tables.forEach((tbl) => {
+            if (!tbl.rows || tbl.rows.length === 0) return;
+            drawSectionTitle(tbl.heading);
+            ensureSpace(12);
+            // Table Header
+            doc.setFillColor(241, 245, 249);
+            doc.rect(margin, y, contentW, 6, "F");
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(7.5);
+            doc.setTextColor(...darkRGB);
+            doc.text("PARAMETER", margin + 2, y + 4.1);
+            doc.text("VALUE", margin + 68, y + 4.1);
+            doc.text("UNIT", margin + 96, y + 4.1);
+            doc.text("REFERENCE RANGE", margin + 124, y + 4.1);
+            doc.text("STATUS", margin + 160, y + 4.1);
+            y += 7;
+
+            tbl.rows.forEach((row, idx) => {
+              ensureSpace(7);
+              if (idx % 2 === 1) {
+                doc.setFillColor(248, 250, 252);
+                doc.rect(margin, y - 3.6, contentW, 5.5, "F");
+              }
+              const computed = computeLabStatus(row.value, row.referenceRange);
+              const statusLabel = computed ? computed.label : (row.status || "-");
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(7.8);
+              doc.setTextColor(...darkRGB);
+              doc.text(String(row.parameter || "-").slice(0, 34), margin + 2, y);
+              doc.setFont("helvetica", "normal");
+              doc.text(String(row.value ?? "-"), margin + 68, y);
+              doc.text(String(row.unit || "-"), margin + 96, y);
+              doc.text(String(row.referenceRange || "-"), margin + 124, y);
+              if (computed?.level === "critical") doc.setTextColor(185, 28, 28);
+              else if (computed?.level === "abnormal") doc.setTextColor(180, 83, 9);
+              else if (computed?.level === "normal") doc.setTextColor(4, 120, 87);
+              else doc.setTextColor(...mutedRGB);
+              doc.setFont("helvetica", "bold");
+              doc.text(statusLabel, margin + 160, y);
+              y += 5.5;
+            });
+            y += 3;
+          });
+
+          // Footers on all pages
+          const totalPages = doc.internal.getNumberOfPages();
+          for (let p = 1; p <= totalPages; p++) {
+            doc.setPage(p);
+            const fy = pageH - 11;
+            doc.setDrawColor(226, 232, 240);
+            doc.line(margin, fy - 4, pageW - margin, fy - 4);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(7.2);
+            doc.setTextColor(...mutedRGB);
+            doc.text(`Generated by ${user?.name || "PulseCare EMR"} (${genTimestamp})  |  CONFIDENTIAL - Clinical use only`, margin, fy);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(...accentRGB);
+            doc.text(`Page ${p} of ${totalPages}`, pageW - margin, fy, { align: "right" });
+          }
+
+          doc.save(filename);
+        } catch (err) {
+          console.error("Diagnostic PDF generation failed:", err);
+          setDiagPdfError(`Failed to generate PDF: ${err.message || "Unknown error"}`);
+        }
+      };
+
+      const downloadXRayPdf = () => {
+        const rad = post?.radiology;
+        if (!rad) return;
+        generateDiagnosticPdf({
+          reportTitle: "Radiology / X-Ray Report",
+          reportSubtitle: rad.studyName || rad.investigation || "Diagnostic Imaging Study",
+          filename: `${record?.id || "PATIENT"}_XRay_Report.pdf`,
+          infoBlocks: [
+            {
+              heading: "Study Information",
+              rows: [
+                { label: "Study Name", value: rad.studyName || rad.investigation },
+                { label: "Study Date", value: rad.date },
+                { label: "Radiologist", value: rad.radiologist || "Attending Radiologist" },
+                ...(rad.priorComparison ? [{ label: "Prior Comparison", value: rad.priorComparison }] : [])
+              ]
+            },
+            {
+              heading: "Radiology Findings & Impression",
+              rows: [
+                { label: "Findings", value: rad.findings },
+                { label: "Impression", value: rad.impression }
+              ]
+            }
+          ]
+        });
+      };
+
+      const downloadBloodPdf = () => {
+        const lab = post?.laboratory;
+        const trt = post?.treatment;
+        if (!lab && !trt?.postopCBC) return;
+        const tables = [];
+        if (lab?.cbc?.length) tables.push({ heading: `Pre-Op / Initial CBC (${lab.dateTime || post?.encounterDates || ""})`, rows: lab.cbc });
+        if (lab?.coagulation?.length) tables.push({ heading: "Pre-Op Coagulation Panel", rows: lab.coagulation });
+        if (lab?.chemistry?.length) tables.push({ heading: "Pre-Op Chemistry & Metabolic Panel", rows: lab.chemistry });
+        if (trt?.postopCBC?.length) tables.push({ heading: `Post-Op CBC (${trt.postopDateTime || ""})`, rows: trt.postopCBC });
+        if (trt?.postopCoagulation?.length) tables.push({ heading: "Post-Op Coagulation", rows: trt.postopCoagulation });
+        if (trt?.postopChemistry?.length) tables.push({ heading: "Post-Op Chemistry", rows: trt.postopChemistry });
+        generateDiagnosticPdf({
+          reportTitle: "Blood & Laboratory Report",
+          reportSubtitle: "Complete Blood Count (CBC), Coagulation & Chemistry Panel",
+          filename: `${record?.id || "PATIENT"}_Blood_Report.pdf`,
+          tables
+        });
+      };
+
+      const downloadCardiacPdf = () => {
+        const preC = pre?.cardiacAssessment;
+        const postC = post?.cardiacAssessment;
+        if (!preC && !postC) return;
+        const infoBlocks = [];
+        if (postC) {
+          infoBlocks.push({
+            heading: "Inpatient / Post-Event Cardiac Assessment",
+            rows: [
+              { label: "ECG Rhythm / Rate", value: postC.ecgDetails ? `${postC.ecgDetails.rhythm} (${postC.ecgDetails.rate})` : (postC.ecgFindings || "-") },
+              ...(postC.ecgDetails ? [
+                { label: "Intervals / Axis", value: `${postC.ecgDetails.intervals} | ${postC.ecgDetails.axis}` },
+                { label: "ECG Interpretation", value: postC.ecgDetails.interpretation }
+              ] : []),
+              ...(postC.echoDetails ? [
+                { label: "Ejection Fraction", value: `${postC.echoDetails.ejectionFraction}%` },
+                { label: "Chambers & Valves", value: `${postC.echoDetails.chamberSizes}; ${postC.echoDetails.valveFindings}` },
+                { label: "Wall Motion", value: `${postC.echoDetails.wallMotion}; Pericardial Effusion: ${postC.echoDetails.pericardialEffusion}` }
+              ] : []),
+              ...(postC.telemetry ? [
+                { label: "Telemetry", value: `${postC.telemetry.durationHours} hrs — ${(postC.telemetry.events && postC.telemetry.events.length) ? postC.telemetry.events.join("; ") : "No arrhythmia events"}` }
+              ] : [])
+            ]
+          });
+        }
+        if (preC) {
+          infoBlocks.push({
+            heading: "Baseline / Pre-Accident Cardiac Assessment",
+            rows: [
+              { label: "Baseline ECG", value: preC.ecgDetails ? `${preC.ecgDetails.rhythm} (${preC.ecgDetails.rate}) - ${preC.ecgDetails.interpretation}` : (preC.ecg || "-") },
+              { label: "Baseline Echo", value: preC.echoDetails ? `EF ${preC.echoDetails.ejectionFraction}% — ${preC.echoDetails.wallMotion}` : (preC.echo || "-") },
+              { label: "Summary Findings", value: preC.findings || "-" }
+            ]
+          });
+        }
+        generateDiagnosticPdf({
+          reportTitle: "Cardiac & Telemetry Assessment Report",
+          reportSubtitle: "12-Lead ECG, Echocardiography & Continuous Telemetry",
+          filename: `${record?.id || "PATIENT"}_Cardiac_Report.pdf`,
+          infoBlocks
+        });
+      };
 
       // Direct 1-Page PDF Download Helper (jsPDF clean clinical layout)
       const downloadOnePagePdf = () => {
@@ -2544,9 +2855,10 @@
             fileType: file.type || (isPdf ? "application/pdf" : "application/octet-stream"),
             uploadedAt: new Date().toLocaleString(),
             uploadedBy: `${user?.name || 'Authorized Staff'} (${user?.role || 'Staff'})`,
-            category: isPdf ? "Clinical PDF Report" : (isImage ? "Diagnostic Image / Scan" : "Medical Document"),
+            category: uploadCategory || "other",
+            parseStatus: "pending",
             dataUrl: fileDataUrl,
-            notes: "Document uploaded via secure EMR portal. Verified intact."
+            notes: `Document uploaded via secure EMR portal (${(uploadCategory || "other").toUpperCase()}). Verified intact.`
           };
 
           if (onAddDocument) {
@@ -2982,6 +3294,20 @@
                 </button>
               </div>
 
+              {/* Tab 0B: X-Ray, Blood & Other Diagnostic Reports */}
+              <div className="relative group flex items-center">
+                <button
+                  onClick={() => setSelectedDocId("DOC-DIAGNOSTICS")}
+                  className={'flex items-center space-x-2 px-3.5 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap ' + 
+                    (selectedDocId === "DOC-DIAGNOSTICS" 
+                      ? 'bg-teal-700 text-white shadow-md shadow-teal-700/20' 
+                      : 'text-teal-800 bg-teal-50/70 hover:bg-teal-100 border border-teal-200')}
+                >
+                  <span>🩻</span>
+                  <span>X-Ray, Blood & Reports</span>
+                </button>
+              </div>
+
               {/* Tab 1: Post-Accident (if present) */}
               {hasPost && (
                 <div className="relative group flex items-center">
@@ -3306,6 +3632,473 @@
               </div>
             </div>
           )}
+
+          {/* VIEW 0B: X-RAY, BLOOD & DIAGNOSTIC REPORTS TAB */}
+          {selectedDocId === "DOC-DIAGNOSTICS" && (() => {
+            const rad = post?.radiology;
+            const lab = post?.laboratory;
+            const trt = post?.treatment;
+            const preC = pre?.cardiacAssessment;
+            const postC = post?.cardiacAssessment;
+
+            // Collect critical flags across Blood & Cardiac (excluding pending-parse uploads)
+            const criticalFlags = [];
+            const scanLabList = (arr, phaseLabel) => {
+              (arr || []).forEach((item) => {
+                const st = computeLabStatus(item.value, item.referenceRange);
+                if (st && st.level === "critical") {
+                  criticalFlags.push(`${item.parameter} (${phaseLabel}): ${item.value} ${item.unit || ""} [${st.label}]`);
+                }
+              });
+            };
+            scanLabList(lab?.cbc, "Pre-Op CBC");
+            scanLabList(lab?.coagulation, "Pre-Op Coag");
+            scanLabList(lab?.chemistry, "Pre-Op Chem");
+            scanLabList(trt?.postopCBC, "Post-Op CBC");
+            scanLabList(trt?.postopCoagulation, "Post-Op Coag");
+            scanLabList(trt?.postopChemistry, "Post-Op Chem");
+
+            const postEf = postC?.echoDetails?.ejectionFraction;
+            const preEf = preC?.echoDetails?.ejectionFraction;
+            if (typeof postEf === "number" && postEf < 40) {
+              criticalFlags.push(`Post-Event Echo Ejection Fraction: ${postEf}% (< 40% Critical)`);
+            }
+            if (typeof preEf === "number" && preEf < 40) {
+              criticalFlags.push(`Baseline Echo Ejection Fraction: ${preEf}% (< 40% Critical)`);
+            }
+            if (postC?.telemetry?.events?.length) {
+              postC.telemetry.events.forEach((ev) => criticalFlags.push(`Telemetry Event: ${ev}`));
+            }
+
+            const renderLabRow = (item, idx) => {
+              const st = computeLabStatus(item.value, item.referenceRange);
+              return (
+                <tr key={idx} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/70">
+                  <td className="py-1.5 px-2 font-semibold text-slate-800">{item.parameter}</td>
+                  <td className="py-1.5 px-2 font-mono font-bold text-slate-900">
+                    {item.value} {item.unit ? <span className="text-[10px] font-normal text-slate-500">{item.unit}</span> : null}
+                  </td>
+                  <td className="py-1.5 px-2 font-mono text-[10px] text-slate-500">{item.referenceRange || "—"}</td>
+                  <td className="py-1.5 px-2 text-right">
+                    {st ? (
+                      <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border ${st.badgeClass}`}>
+                        {st.label}
+                      </span>
+                    ) : null}
+                  </td>
+                </tr>
+              );
+            };
+
+            const categoryOrder = ["xray", "blood", "cardiac", "other"];
+            const categoryLabels = {
+              xray: "🩻 Radiology / X-Ray Scans",
+              blood: "🩸 Blood & Lab Files",
+              cardiac: "❤️ Cardiac & Telemetry Files",
+              other: "📁 Other Clinical Documents"
+            };
+            const groupedUploads = categoryOrder.reduce((acc, cat) => {
+              const items = uploadedDocs.filter((d) => (d.category || "other").toLowerCase() === cat);
+              if (items.length > 0) acc[cat] = items;
+              return acc;
+            }, {});
+            const uncategorized = uploadedDocs.filter((d) => !categoryOrder.includes((d.category || "other").toLowerCase()));
+            if (uncategorized.length > 0) {
+              groupedUploads.other = [...(groupedUploads.other || []), ...uncategorized];
+            }
+
+            return (
+              <div className="space-y-5 screen-fade">
+                {/* Critical Value Alert Banner */}
+                {criticalFlags.length > 0 && (
+                  <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 text-rose-950 shadow-sm space-y-1.5">
+                    <div className="flex items-center gap-2 font-black text-xs uppercase tracking-wider text-rose-800">
+                      <span>🚨</span>
+                      <span>Critical Diagnostic Alert ({criticalFlags.length} Flagged)</span>
+                    </div>
+                    <ul className="list-disc list-inside text-xs space-y-0.5 font-semibold text-rose-900">
+                      {criticalFlags.map((flag, i) => (
+                        <li key={i}>{flag}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Inline PDF Error Banner */}
+                {diagPdfError && (
+                  <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-semibold flex items-center justify-between">
+                    <span>⚠️ {diagPdfError}</span>
+                    <button type="button" onClick={() => setDiagPdfError("")} className="text-rose-600 hover:text-rose-900 font-bold ml-3">✕</button>
+                  </div>
+                )}
+
+                {/* 1. RADIOLOGY / X-RAY CARD */}
+                <div className="glass-card rounded-2xl p-6 border border-slate-200 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <span>🩻</span>
+                        <span>Radiology & X-Ray Reports</span>
+                      </h3>
+                      <p className="text-xs text-slate-500">Imaging studies, radiologist impression, and PACS preview</p>
+                    </div>
+                    <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => { setUploadCategory("xray"); setShowUploadModal(true); }}
+                        className="px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <span>➕ Upload X-Ray (PNG/PDF)</span>
+                      </button>
+                      {rad && (
+                        <button
+                          type="button"
+                          onClick={downloadXRayPdf}
+                          className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <span>⬇️ Download X-Ray Report (PDF)</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {rad ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start text-xs">
+                      <div className="md:col-span-2 space-y-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                          <div>
+                            <span className="text-[10px] font-bold uppercase text-slate-400 block">Study Name</span>
+                            <span className="font-bold text-slate-900">{rad.studyName || rad.investigation}</span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-bold uppercase text-slate-400 block">Study Date</span>
+                            <span className="font-semibold text-slate-800">{rad.date}</span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-bold uppercase text-slate-400 block">Radiologist</span>
+                            <span className="font-semibold text-slate-800">{rad.radiologist || "Attending Radiologist"}</span>
+                          </div>
+                        </div>
+
+                        <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 block mb-1">Radiologist Impression</span>
+                          <p className="text-sm font-bold text-slate-900 leading-snug">{rad.impression}</p>
+                        </div>
+
+                        <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1.5">
+                          <div>
+                            <span className="font-bold text-slate-700">Findings: </span>
+                            <span className="text-slate-700">{rad.findings}</span>
+                          </div>
+                          {rad.priorComparison && (
+                            <div className="pt-1.5 border-t border-slate-100 text-slate-600">
+                              <span className="font-bold text-slate-700">Prior Comparison: </span>
+                              <span>{rad.priorComparison}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center">
+                        {rad.imageUrl ? (
+                          <div
+                            onClick={() => setZoomedImage({ url: rad.imageUrl, title: rad.studyName || rad.investigation })}
+                            className="cursor-zoom-in group relative rounded-xl overflow-hidden border border-slate-300 bg-slate-950 shadow-sm w-full"
+                          >
+                            <img src={rad.imageUrl} alt={rad.studyName || "X-Ray"} className="w-full h-44 object-contain" />
+                            <div className="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white text-[10px] font-semibold text-center py-1 group-hover:bg-blue-700 transition-colors">
+                              🔍 Click to Zoom X-Ray
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-full h-40 rounded-xl border border-dashed border-slate-300 bg-slate-50 flex items-center justify-center text-slate-400 text-xs">
+                            No PACS thumbnail attached
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500 text-center">
+                      No reports on file
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. BLOOD & LABORATORY CARD */}
+                <div className="glass-card rounded-2xl p-6 border border-slate-200 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <span>🩸</span>
+                        <span>Blood & Laboratory Reports</span>
+                      </h3>
+                      <p className="text-xs text-slate-500">CBC, Coagulation & Chemistry with pre-op vs post-op comparison</p>
+                    </div>
+                    <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => { setUploadCategory("blood"); setShowUploadModal(true); }}
+                        className="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <span>➕ Upload Blood Report (PNG/PDF)</span>
+                      </button>
+                      {(lab || trt?.postopCBC) && (
+                        <button
+                          type="button"
+                          onClick={downloadBloodPdf}
+                          className="px-3.5 py-2 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <span>⬇️ Download Blood Report (PDF)</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {(lab || trt?.postopCBC) ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
+                      {/* Pre-Op / Initial */}
+                      <div className="border border-slate-200 rounded-xl p-3.5 space-y-3 bg-white">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                          <span className="font-bold text-slate-900">Pre-Op / Initial Panel</span>
+                          <span className="font-mono text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded">{lab?.dateTime || post?.encounterDates || "Admission"}</span>
+                        </div>
+                        {lab?.cbc?.length > 0 && (
+                          <div>
+                            <div className="text-[10px] font-bold uppercase text-slate-500 mb-1">Complete Blood Count (CBC)</div>
+                            <table className="w-full text-left text-[11px]">
+                              <thead className="text-[9px] uppercase text-slate-400 border-b border-slate-200">
+                                <tr><th className="py-1 px-2">Parameter</th><th className="py-1 px-2">Value</th><th className="py-1 px-2">Ref Range</th><th className="py-1 px-2 text-right">Status</th></tr>
+                              </thead>
+                              <tbody>{lab.cbc.map(renderLabRow)}</tbody>
+                            </table>
+                          </div>
+                        )}
+                        {lab?.coagulation?.length > 0 && (
+                          <div>
+                            <div className="text-[10px] font-bold uppercase text-slate-500 mb-1">Coagulation</div>
+                            <table className="w-full text-left text-[11px]"><tbody>{lab.coagulation.map(renderLabRow)}</tbody></table>
+                          </div>
+                        )}
+                        {lab?.chemistry?.length > 0 && (
+                          <div>
+                            <div className="text-[10px] font-bold uppercase text-slate-500 mb-1">Chemistry & Electrolytes</div>
+                            <table className="w-full text-left text-[11px]"><tbody>{lab.chemistry.map(renderLabRow)}</tbody></table>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Post-Op */}
+                      <div className="border border-slate-200 rounded-xl p-3.5 space-y-3 bg-white">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                          <span className="font-bold text-slate-900">Post-Op / Recovery Panel</span>
+                          <span className="font-mono text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{trt?.postopDateTime || "Post-Op"}</span>
+                        </div>
+                        {trt?.postopCBC?.length > 0 ? (
+                          <>
+                            <div>
+                              <div className="text-[10px] font-bold uppercase text-slate-500 mb-1">Post-Op CBC</div>
+                              <table className="w-full text-left text-[11px]">
+                                <thead className="text-[9px] uppercase text-slate-400 border-b border-slate-200">
+                                  <tr><th className="py-1 px-2">Parameter</th><th className="py-1 px-2">Value</th><th className="py-1 px-2">Ref Range</th><th className="py-1 px-2 text-right">Status</th></tr>
+                                </thead>
+                                <tbody>{trt.postopCBC.map(renderLabRow)}</tbody>
+                              </table>
+                            </div>
+                            {trt?.postopCoagulation?.length > 0 && (
+                              <div>
+                                <div className="text-[10px] font-bold uppercase text-slate-500 mb-1">Post-Op Coagulation</div>
+                                <table className="w-full text-left text-[11px]"><tbody>{trt.postopCoagulation.map(renderLabRow)}</tbody></table>
+                              </div>
+                            )}
+                            {trt?.postopChemistry?.length > 0 && (
+                              <div>
+                                <div className="text-[10px] font-bold uppercase text-slate-500 mb-1">Post-Op Chemistry</div>
+                                <table className="w-full text-left text-[11px]"><tbody>{trt.postopChemistry.map(renderLabRow)}</tbody></table>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="text-xs text-slate-500 py-4 text-center">No post-op blood labs on file</div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500 text-center">
+                      No reports on file
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. CARDIAC & OTHER ASSESSMENTS CARD */}
+                <div className="glass-card rounded-2xl p-6 border border-slate-200 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <span>❤️</span>
+                        <span>Cardiac & Telemetry Assessments</span>
+                      </h3>
+                      <p className="text-xs text-slate-500">12-Lead ECG, Echocardiography (EF%), and Continuous Telemetry</p>
+                    </div>
+                    {(preC || postC) && (
+                      <button
+                        type="button"
+                        onClick={downloadCardiacPdf}
+                        className="px-3.5 py-2 rounded-xl bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-colors self-start sm:self-auto cursor-pointer"
+                      >
+                        <span>⬇️ Download Cardiac Report (PDF)</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {(preC || postC) ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      {[
+                        { label: "Inpatient / Post-Event Cardiac", data: postC },
+                        { label: "Pre-Accident Baseline Cardiac", data: preC }
+                      ].filter(x => x.data).map((block, idx) => {
+                        const ef = block.data.echoDetails?.ejectionFraction;
+                        const efCritical = typeof ef === "number" && ef < 40;
+                        const hasEvents = block.data.telemetry?.events?.length > 0;
+                        return (
+                          <div key={idx} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-slate-900">{block.label}</span>
+                              {typeof ef === "number" && (
+                                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black border ${efCritical ? "bg-rose-100 text-rose-800 border-rose-300" : "bg-emerald-100 text-emerald-800 border-emerald-200"}`}>
+                                  EF: {ef}% {efCritical ? "(CRITICAL < 40%)" : "(Preserved)"}
+                                </span>
+                              )}
+                            </div>
+
+                            {block.data.ecgDetails ? (
+                              <div className="p-2.5 rounded-lg bg-white border border-slate-200 space-y-1">
+                                <div className="font-bold text-slate-800">ECG: {block.data.ecgDetails.rhythm} ({block.data.ecgDetails.rate})</div>
+                                <div className="text-[11px] text-slate-500">{block.data.ecgDetails.intervals} &bull; {block.data.ecgDetails.axis}</div>
+                                <div className="text-slate-700">{block.data.ecgDetails.interpretation}</div>
+                              </div>
+                            ) : (
+                              <div className="p-2.5 rounded-lg bg-white border border-slate-200 text-slate-700">
+                                {block.data.ecgFindings || block.data.ecg}
+                              </div>
+                            )}
+
+                            {block.data.echoDetails && (
+                              <div className="p-2.5 rounded-lg bg-white border border-slate-200 space-y-1">
+                                <div className="font-bold text-slate-800">Echocardiography</div>
+                                <div className="text-slate-700">Chambers: {block.data.echoDetails.chamberSizes} &bull; Valves: {block.data.echoDetails.valveFindings}</div>
+                                <div className="text-slate-700">Wall Motion: {block.data.echoDetails.wallMotion} &bull; Effusion: {block.data.echoDetails.pericardialEffusion}</div>
+                              </div>
+                            )}
+
+                            {block.data.telemetry && (
+                              <div className={`p-2.5 rounded-lg border ${hasEvents ? "bg-rose-50/70 border-rose-200" : "bg-white border-slate-200"}`}>
+                                <div className="flex items-center justify-between font-bold text-slate-800">
+                                  <span>Telemetry ({block.data.telemetry.durationHours} hrs)</span>
+                                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${hasEvents ? "bg-rose-600 text-white" : "bg-emerald-100 text-emerald-800"}`}>
+                                    {hasEvents ? "Arrhythmia Event" : "No Events"}
+                                  </span>
+                                </div>
+                                {hasEvents && (
+                                  <ul className="list-disc list-inside mt-1 text-rose-900 font-medium">
+                                    {block.data.telemetry.events.map((ev, i) => <li key={i}>{ev}</li>)}
+                                  </ul>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500 text-center">
+                      No reports on file
+                    </div>
+                  )}
+                </div>
+
+                {/* 4. UPLOADED SCANS & FILES CARD */}
+                <div className="glass-card rounded-2xl p-6 border border-slate-200 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <span>📂</span>
+                        <span>Uploaded Scans & Files</span>
+                      </h3>
+                      <p className="text-xs text-slate-500">Categorized clinical attachments, lab PDFs, and PACS scans</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowUploadModal(true)}
+                      className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-colors self-start sm:self-auto cursor-pointer"
+                    >
+                      <span>➕ Upload Report / Scan</span>
+                    </button>
+                  </div>
+
+                  {uploadedDocs.length > 0 ? (
+                    <div className="space-y-4 text-xs">
+                      {Object.entries(groupedUploads).map(([cat, docs]) => (
+                        <div key={cat} className="space-y-2">
+                          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">{categoryLabels[cat] || cat}</div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {docs.map((doc) => (
+                              <div key={doc.documentId} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-start justify-between gap-3">
+                                <div className="space-y-1 min-w-0">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="font-bold text-slate-900 truncate">{doc.title}</span>
+                                    {doc.parseStatus === "pending" && (
+                                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                                        Uploaded, not yet parsed
+                                      </span>
+                                    )}
+                                    {doc.linkedReportId && (
+                                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
+                                        Linked: {doc.linkedReportId}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-[11px] text-slate-500">
+                                    By <strong>{doc.uploadedBy}</strong> &bull; {doc.uploadedAt} &bull; {doc.fileType} ({doc.fileSize})
+                                  </div>
+                                </div>
+                                <a
+                                  href={doc.dataUrl}
+                                  download={doc.fileName}
+                                  className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] whitespace-nowrap shadow-sm"
+                                >
+                                  ⬇️ Download File
+                                </a>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500 text-center">
+                      No uploaded files on file — use <strong>➕ Upload Report / Scan</strong> above to attach scans or lab PDFs.
+                    </div>
+                  )}
+                </div>
+
+                {/* X-Ray Click-to-Zoom Lightbox Modal */}
+                {zoomedImage && (
+                  <div
+                    onClick={() => setZoomedImage(null)}
+                    className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
+                  >
+                    <div onClick={(e) => e.stopPropagation()} className="bg-slate-900 border border-slate-700 rounded-2xl p-4 max-w-3xl w-full space-y-3 shadow-2xl">
+                      <div className="flex items-center justify-between text-white text-xs">
+                        <span className="font-bold">{zoomedImage.title}</span>
+                        <button type="button" onClick={() => setZoomedImage(null)} className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 font-bold">✕ Close</button>
+                      </div>
+                      <img src={zoomedImage.url} alt={zoomedImage.title} className="w-full max-h-[75vh] object-contain rounded-xl bg-black" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* VIEW 3: UPLOADED DOCUMENT VIEW */}
           {currentUploadedDoc && (
@@ -3866,6 +4659,33 @@
                   >
                     &times;
                   </button>
+                </div>
+
+                {/* Segregated Report Type Selector */}
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+                    Select Report / Document Type
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { id: "xray", label: "🩻 X-Ray / Scan" },
+                      { id: "blood", label: "🩸 Blood Report" },
+                      { id: "cardiac", label: "❤️ Cardiac / ECG" },
+                      { id: "other", label: "📁 Other Report" }
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setUploadCategory(opt.id)}
+                        className={'px-2.5 py-2 rounded-xl text-xs font-bold border transition-all text-center cursor-pointer ' +
+                          (uploadCategory === opt.id
+                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100')}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Drag-and-Drop Zone */}

@@ -24,37 +24,49 @@
         "name": "Blood Pressure",
         "value": "128/78",
         "unit": "mmHg",
-        "status": "Controlled"
+        "status": "Controlled",
+        "parameter": "Blood Pressure",
+        "referenceRange": "90-120 / 60-80"
       },
       {
         "name": "Heart Rate",
         "value": "76",
         "unit": "BPM",
-        "status": "Normal Sinus"
+        "status": "Normal Sinus",
+        "parameter": "Heart Rate",
+        "referenceRange": "60-100"
       },
       {
         "name": "Oxygen Saturation",
         "value": "99%",
         "unit": "SpO2 on Room Air",
-        "status": "Optimal"
+        "status": "Optimal",
+        "parameter": "Oxygen Saturation",
+        "referenceRange": "95-100"
       },
       {
         "name": "Body Temperature",
         "value": "36.7 °C",
         "unit": "(98.1 °F)",
-        "status": "Afebrile"
+        "status": "Afebrile",
+        "parameter": "Body Temperature",
+        "referenceRange": "36.1-37.2"
       },
       {
         "name": "Respiratory Rate",
         "value": "16",
         "unit": "breaths/min",
-        "status": "Eupneic"
+        "status": "Eupneic",
+        "parameter": "Respiratory Rate",
+        "referenceRange": "12-20"
       },
       {
         "name": "Pain Score",
         "value": "2 / 10",
         "unit": "Numeric Rating Scale",
-        "status": "Well Controlled"
+        "status": "Well Controlled",
+        "parameter": "Pain Score",
+        "referenceRange": "0-3"
       }
     ],
     "preRecord": {
@@ -125,7 +137,25 @@
       "cardiacAssessment": {
         "ecg": "Normal sinus rhythm at the time of examination.",
         "echo": "Preserved left ventricular systolic function, estimated ejection fraction (EF) of 60%.",
-        "findings": "No acute cardiac abnormality was identified during this consultation."
+        "findings": "No acute cardiac abnormality was identified during this consultation.",
+        "ecgDetails": {
+          "rhythm": "Normal Sinus Rhythm",
+          "rate": "76 BPM",
+          "intervals": "PR 156 ms, QRS 86 ms, QTc 408 ms",
+          "axis": "Normal (+52 deg)",
+          "interpretation": "Normal baseline 12-lead ECG; no acute ischemic changes or active PSVT."
+        },
+        "echoDetails": {
+          "ejectionFraction": 60,
+          "chamberSizes": "Normal LV/LA/RV/RA dimensions",
+          "valveFindings": "No significant valvular regurgitation or stenosis",
+          "wallMotion": "Normal global and regional wall motion",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 0,
+          "events": []
+        }
       },
       "clinicalAssessment": "The patient was generally healthy and physically independent. Known PSVT was stable on prescribed Metoprolol Succinate therapy. No acute medical concerns were identified during this visit. Continued prescribed medication and routine cardiology follow-up were advised."
     },
@@ -202,33 +232,103 @@
         "investigation": "Digital X-Ray Right Femur (AP and Lateral views)",
         "date": "20 November 2026",
         "findings": "Displaced transverse fracture involving the midshaft of the right femur, with cortical disruption and displacement of fracture fragments. No additional fracture identified in visualized femur portions.",
-        "impression": "Closed displaced transverse fracture of the midshaft of the right femur (AO/OTA 32-A3)."
+        "impression": "Closed displaced transverse fracture of the midshaft of the right femur (AO/OTA 32-A3).",
+        "studyName": "Digital X-Ray Right Femur (AP & Lateral Views)",
+        "radiologist": "Dr. Kavita Iyer, MD (Radiology)",
+        "priorComparison": "No prior right femur radiograph on file; post-op CRIF nail alignment verified on 21 Nov 2026.",
+        "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3ERight%20Femur%20AP%2FLat%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E20%20Nov%202026%20%7C%20Midshaft%20Transverse%20Fracture%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EFINDING%3A%20AO%2FOTA%2032-A3%20Displaced%20Midshaft%20Fracture%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
       },
       "laboratory": {
         "cbc": [
           {
             "parameter": "Hemoglobin",
-            "value": "13.4 g/dL",
-            "status": "Normal"
-          },
-          {
-            "parameter": "RBC",
-            "value": "4.75 million/µL",
-            "status": "Normal"
-          },
-          {
-            "parameter": "WBC",
-            "value": "11,800 /µL",
-            "status": "Mild Leukocytosis (Trauma)"
-          },
-          {
-            "parameter": "Platelets",
-            "value": "268,000 /µL",
+            "value": "13.4",
+            "unit": "g/dL",
+            "referenceRange": "13.0-17.0",
             "status": "Normal"
           },
           {
             "parameter": "Hematocrit",
-            "value": "40.2%",
+            "value": "40.2",
+            "unit": "%",
+            "referenceRange": "38.0-50.0",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RBC",
+            "value": "4.75",
+            "unit": "million/uL",
+            "referenceRange": "4.5-5.9",
+            "status": "Normal"
+          },
+          {
+            "parameter": "WBC",
+            "value": "11800",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "High"
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "74",
+            "unit": "%",
+            "referenceRange": "40-70",
+            "status": "High"
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "19",
+            "unit": "%",
+            "referenceRange": "20-40",
+            "status": "Low"
+          },
+          {
+            "parameter": "Monocytes",
+            "value": "5",
+            "unit": "%",
+            "referenceRange": "2-8",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Eosinophils",
+            "value": "2",
+            "unit": "%",
+            "referenceRange": "1-4",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "268000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCV",
+            "value": "84.6",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCH",
+            "value": "28.2",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "33.3",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "13.1",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
             "status": "Normal"
           }
         ],
@@ -263,12 +363,121 @@
             "value": "1.0",
             "status": "Normal Coagulation"
           }
+        ],
+        "dateTime": "2026-11-20 10:30",
+        "coagulation": [
+          {
+            "parameter": "PT",
+            "value": "12.4",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.0",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "29.5",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "chemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "102",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "139",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.2",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Chloride",
+            "value": "101",
+            "unit": "mmol/L",
+            "referenceRange": "98-107",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Blood Urea (BUN)",
+            "value": "24",
+            "unit": "mg/dL",
+            "referenceRange": "15-40",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "0.9",
+            "unit": "mg/dL",
+            "referenceRange": "0.7-1.3",
+            "status": "Normal"
+          },
+          {
+            "parameter": "ALT (SGPT)",
+            "value": "28",
+            "unit": "U/L",
+            "referenceRange": "7-56",
+            "status": "Normal"
+          },
+          {
+            "parameter": "AST (SGOT)",
+            "value": "31",
+            "unit": "U/L",
+            "referenceRange": "10-40",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Total Bilirubin",
+            "value": "0.7",
+            "unit": "mg/dL",
+            "referenceRange": "0.2-1.2",
+            "status": "Normal"
+          }
         ]
       },
       "cardiacAssessment": {
         "ecgDate": "20 November 2026",
         "ecgFindings": "Sinus tachycardia, approximately 108 BPM. No acute ischemic ST-T changes identified. No sustained PSVT episode captured on the recorded ECG.",
-        "monitoring": "Continuous telemetry initiated due to known PSVT history. Cardiology review and anesthetic assessment cleared patient for operative fixation."
+        "monitoring": "Continuous telemetry initiated due to known PSVT history. Cardiology review and anesthetic assessment cleared patient for operative fixation.",
+        "ecgDetails": {
+          "rhythm": "Sinus Tachycardia",
+          "rate": "108 BPM",
+          "intervals": "PR 144 ms, QRS 88 ms, QTc 418 ms",
+          "axis": "Normal (+54 deg)",
+          "interpretation": "Reactive sinus tachycardia secondary to acute trauma pain; no ST-T ischemic changes."
+        },
+        "echoDetails": {
+          "ejectionFraction": 58,
+          "chamberSizes": "Normal cardiac chambers",
+          "valveFindings": "Trace physiological TR, structurally normal valves",
+          "wallMotion": "No regional wall motion abnormality",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 48,
+          "events": [
+            "Brief self-limiting sinus tachycardia (112 BPM) during immediate post-op recovery; no sustained PSVT"
+          ]
+        }
       },
       "diagnosis": {
         "primary": "Closed displaced transverse fracture of the midshaft right femur",
@@ -284,18 +493,155 @@
         "postopCBC": [
           {
             "parameter": "Hemoglobin",
-            "value": "11.8 g/dL",
-            "status": "Expected perioperative drop"
+            "value": "11.8",
+            "unit": "g/dL",
+            "referenceRange": "13.0-17.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "35.4",
+            "unit": "%",
+            "referenceRange": "38.0-50.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "RBC",
+            "value": "4.18",
+            "unit": "million/uL",
+            "referenceRange": "4.5-5.9",
+            "status": "Low"
           },
           {
             "parameter": "WBC",
-            "value": "10,600 /µL",
-            "status": "Normalizing"
+            "value": "10600",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "68",
+            "unit": "%",
+            "referenceRange": "40-70",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "24",
+            "unit": "%",
+            "referenceRange": "20-40",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Monocytes",
+            "value": "6",
+            "unit": "%",
+            "referenceRange": "2-8",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Eosinophils",
+            "value": "2",
+            "unit": "%",
+            "referenceRange": "1-4",
+            "status": "Normal"
           },
           {
             "parameter": "Platelets",
-            "value": "244,000 /µL",
-            "status": "Adequate"
+            "value": "244000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCV",
+            "value": "84.7",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCH",
+            "value": "28.2",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "33.3",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "13.4",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
+            "status": "Normal"
+          }
+        ],
+        "postopDateTime": "2026-11-22 08:15",
+        "postopCoagulation": [
+          {
+            "parameter": "PT",
+            "value": "13.1",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.1",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "32.0",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "postopChemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "114",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "138",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.1",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "0.9",
+            "unit": "mg/dL",
+            "referenceRange": "0.7-1.3",
+            "status": "Normal"
+          },
+          {
+            "parameter": "ALT (SGPT)",
+            "value": "34",
+            "unit": "U/L",
+            "referenceRange": "7-56",
+            "status": "Normal"
           }
         ]
       },
@@ -335,7 +681,50 @@
         "Follow prescribed 14-day subcutaneous thromboprophylaxis plan",
         "Seek emergency medical evaluation if experiencing chest pain, shortness of breath, palpitations, or worsening leg pain"
       ]
-    }
+    },
+    "uploadedDocuments": [
+      {
+        "documentId": "UPL-001-XRAY",
+        "title": "Right Femur AP & Lateral X-Ray Scan",
+        "fileName": "PAT-2026-001_Right_Femur_XRay.svg",
+        "uploadedBy": "Dr. Rohan Verma (Orthopedics)",
+        "uploadedAt": "20 Nov 2026, 10:42 AM",
+        "fileType": "image/svg+xml",
+        "fileSize": "4.2 KB",
+        "category": "xray",
+        "linkedReportId": "DOC-POST-2026-001",
+        "parseStatus": "parsed",
+        "notes": "Digital PACS export of pre-op femur fracture.",
+        "dataUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3ERight%20Femur%20AP%2FLat%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E20%20Nov%202026%20%7C%20PACS%20Export%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EAO%2FOTA%2032-A3%20Midshaft%20Fracture%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
+      },
+      {
+        "documentId": "UPL-001-LAB",
+        "title": "Post-Op Day 2 Hematology & Coagulation Sheet",
+        "fileName": "PAT-2026-001_PostOp_CBC.pdf",
+        "uploadedBy": "Central Pathology Lab",
+        "uploadedAt": "22 Nov 2026, 08:30 AM",
+        "fileType": "application/pdf",
+        "fileSize": "128 KB",
+        "category": "blood",
+        "linkedReportId": "DOC-POST-2026-001",
+        "parseStatus": "parsed",
+        "notes": "Verified post-operative CBC & coagulation panel.",
+        "dataUrl": "/data/reports/PAT-2026-001_Post-Accident_Hospital_Report.pdf"
+      },
+      {
+        "documentId": "UPL-001-PEND",
+        "title": "Physiotherapy Gait Assessment Notes",
+        "fileName": "PAT-2026-001_Physio_Notes.pdf",
+        "uploadedBy": "Physio Dept",
+        "uploadedAt": "24 Nov 2026, 02:15 PM",
+        "fileType": "application/pdf",
+        "fileSize": "94 KB",
+        "category": "other",
+        "parseStatus": "pending",
+        "notes": "Awaiting automated EMR parsing.",
+        "dataUrl": "/data/reports/PAT-2026-001_Pre-Accident_Medical_Record.pdf"
+      }
+    ]
   },
   "PAT-2026-002": {
     "id": "PAT-2026-002",
@@ -362,37 +751,49 @@
         "name": "Blood Pressure",
         "value": "118/74",
         "unit": "mmHg",
-        "status": "Normal"
+        "status": "Normal",
+        "parameter": "Blood Pressure",
+        "referenceRange": "90-120 / 60-80"
       },
       {
         "name": "Heart Rate",
         "value": "72",
         "unit": "BPM",
-        "status": "Normal Sinus"
+        "status": "Normal Sinus",
+        "parameter": "Heart Rate",
+        "referenceRange": "60-100"
       },
       {
         "name": "Oxygen Saturation",
         "value": "99%",
         "unit": "SpO2 on Room Air",
-        "status": "Optimal"
+        "status": "Optimal",
+        "parameter": "Oxygen Saturation",
+        "referenceRange": "95-100"
       },
       {
         "name": "Body Temperature",
         "value": "36.6 °C",
         "unit": "(97.9 °F)",
-        "status": "Afebrile"
+        "status": "Afebrile",
+        "parameter": "Body Temperature",
+        "referenceRange": "36.1-37.2"
       },
       {
         "name": "Respiratory Rate",
         "value": "15",
         "unit": "breaths/min",
-        "status": "Eupneic"
+        "status": "Eupneic",
+        "parameter": "Respiratory Rate",
+        "referenceRange": "12-20"
       },
       {
         "name": "Pain Score",
         "value": "1 / 10",
         "unit": "Numeric Rating Scale",
-        "status": "Minimal / Controlled"
+        "status": "Minimal / Controlled",
+        "parameter": "Pain Score",
+        "referenceRange": "0-3"
       }
     ],
     "preRecord": {
@@ -469,7 +870,25 @@
       "cardiacAssessment": {
         "ecg": "Normal sinus rhythm, 70 BPM. No conduction abnormalities.",
         "echo": "Not clinically indicated.",
-        "findings": "Heart sounds S1 S2 normal; no murmurs."
+        "findings": "Heart sounds S1 S2 normal; no murmurs.",
+        "ecgDetails": {
+          "rhythm": "Normal Sinus Rhythm",
+          "rate": "72 BPM",
+          "intervals": "PR 150 ms, QRS 82 ms, QTc 410 ms",
+          "axis": "Normal",
+          "interpretation": "Normal baseline ECG."
+        },
+        "echoDetails": {
+          "ejectionFraction": 62,
+          "chamberSizes": "Normal",
+          "valveFindings": "Normal",
+          "wallMotion": "Normal",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 0,
+          "events": []
+        }
       },
       "clinicalAssessment": "Patient is euthyroid and in robust general health. TSH level at 2.1 mIU/L (normal range 0.4-4.0). Continue current dose of Levothyroxine 50 mcg QD. Routine follow-up in 12 months."
     },
@@ -546,33 +965,89 @@
         "investigation": "Digital X-Ray Right Wrist (PA and Lateral)",
         "date": "18 November 2026",
         "findings": "Closed extra-articular transverse fracture of the distal radius with dorsal displacement and tilt. Ulnar styloid intact. Joint congruent.",
-        "impression": "Closed displaced right distal radius Colles fracture (AO 23-A2)."
+        "impression": "Closed displaced right distal radius Colles fracture (AO 23-A2).",
+        "studyName": "Digital X-Ray Right Wrist (PA & Lateral)",
+        "radiologist": "Dr. Arvind Kulkarni, MD (Radiology)",
+        "priorComparison": "Check radiograph post-cast shows satisfactory volar tilt restoration.",
+        "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3ERight%20Wrist%20PA%2FLat%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E21%20Nov%202026%20%7C%20Distal%20Radius%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EFINDING%3A%20Colles%20Fracture%20-%20Post-Reduction%20Casted%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
       },
       "laboratory": {
         "cbc": [
           {
             "parameter": "Hemoglobin",
-            "value": "12.9 g/dL",
-            "status": "Normal"
-          },
-          {
-            "parameter": "RBC",
-            "value": "4.40 million/µL",
-            "status": "Normal"
-          },
-          {
-            "parameter": "WBC",
-            "value": "8,900 /µL",
-            "status": "Normal"
-          },
-          {
-            "parameter": "Platelets",
-            "value": "275,000 /µL",
+            "value": "12.2",
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.5",
             "status": "Normal"
           },
           {
             "parameter": "Hematocrit",
-            "value": "38.5%",
+            "value": "37.1",
+            "unit": "%",
+            "referenceRange": "36.0-46.0",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RBC",
+            "value": "4.35",
+            "unit": "million/uL",
+            "referenceRange": "4.0-5.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "WBC",
+            "value": "9400",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "64",
+            "unit": "%",
+            "referenceRange": "40-70",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "28",
+            "unit": "%",
+            "referenceRange": "20-40",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "245000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCV",
+            "value": "85.2",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCH",
+            "value": "28.0",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "32.9",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "13.0",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
             "status": "Normal"
           }
         ],
@@ -602,12 +1077,91 @@
             "value": "1.0",
             "status": "Normal"
           }
+        ],
+        "dateTime": "2026-11-21 11:15",
+        "coagulation": [
+          {
+            "parameter": "PT",
+            "value": "12.0",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.0",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "28.0",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "chemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "96",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "140",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.0",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "0.75",
+            "unit": "mg/dL",
+            "referenceRange": "0.6-1.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "TSH",
+            "value": "2.4",
+            "unit": "mIU/L",
+            "referenceRange": "0.4-4.5",
+            "status": "Normal"
+          }
         ]
       },
       "cardiacAssessment": {
         "ecgDate": "18 November 2026",
         "ecgFindings": "Normal sinus rhythm, 92 BPM. No arrhythmia or ST changes.",
-        "monitoring": "Monitored during procedural hematoma block and reduction."
+        "monitoring": "Monitored during procedural hematoma block and reduction.",
+        "ecgDetails": {
+          "rhythm": "Normal Sinus Rhythm",
+          "rate": "78 BPM",
+          "intervals": "PR 148 ms, QRS 82 ms, QTc 412 ms",
+          "axis": "Normal",
+          "interpretation": "Stable sinus rhythm."
+        },
+        "echoDetails": {
+          "ejectionFraction": 62,
+          "chamberSizes": "Normal",
+          "valveFindings": "Normal",
+          "wallMotion": "Normal",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 12,
+          "events": []
+        }
       },
       "diagnosis": {
         "primary": "Closed displaced right distal radius Colles fracture",
@@ -623,20 +1177,36 @@
         "postopCBC": [
           {
             "parameter": "Hemoglobin",
-            "value": "12.7 g/dL",
-            "status": "Stable"
+            "value": "12.0",
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "36.5",
+            "unit": "%",
+            "referenceRange": "36.0-46.0",
+            "status": "Normal"
           },
           {
             "parameter": "WBC",
-            "value": "8,400 /µL",
+            "value": "8100",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
             "status": "Normal"
           },
           {
             "parameter": "Platelets",
-            "value": "270,000 /µL",
+            "value": "240000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
             "status": "Normal"
           }
-        ]
+        ],
+        "postopDateTime": "2026-11-22 09:00",
+        "postopCoagulation": [],
+        "postopChemistry": []
       },
       "dischargeMeds": [
         {
@@ -672,7 +1242,23 @@
         "Cast removal planned at 6 weeks followed by wrist physiotherapy",
         "Urgent consult if fingers become blue, pale, swollen, or numb"
       ]
-    }
+    },
+    "uploadedDocuments": [
+      {
+        "documentId": "UPL-002-XRAY",
+        "title": "Right Wrist Post-Reduction X-Ray",
+        "fileName": "PAT-2026-002_Wrist_XRay.svg",
+        "uploadedBy": "Dr. Sneha Joshi",
+        "uploadedAt": "21 Nov 2026, 01:10 PM",
+        "fileType": "image/svg+xml",
+        "fileSize": "4.1 KB",
+        "category": "xray",
+        "linkedReportId": "DOC-POST-2026-002",
+        "parseStatus": "parsed",
+        "notes": "Post-cast alignment check.",
+        "dataUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3ERight%20Wrist%20PA%2FLat%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E21%20Nov%202026%20%7C%20Post-Reduction%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EColles%20Fracture%20Reduced%20%26%20Casted%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
+      }
+    ]
   },
   "PAT-2026-003": {
     "id": "PAT-2026-003",
@@ -699,37 +1285,49 @@
         "name": "Blood Pressure",
         "value": "126/80",
         "unit": "mmHg",
-        "status": "Optimal"
+        "status": "Optimal",
+        "parameter": "Blood Pressure",
+        "referenceRange": "90-120 / 60-80"
       },
       {
         "name": "Heart Rate",
         "value": "74",
         "unit": "BPM",
-        "status": "Normal Sinus"
+        "status": "Normal Sinus",
+        "parameter": "Heart Rate",
+        "referenceRange": "60-100"
       },
       {
         "name": "Oxygen Saturation",
         "value": "98%",
         "unit": "SpO2 on Room Air",
-        "status": "Normal"
+        "status": "Normal",
+        "parameter": "Oxygen Saturation",
+        "referenceRange": "95-100"
       },
       {
         "name": "Body Temperature",
         "value": "36.8 °C",
         "unit": "(98.2 °F)",
-        "status": "Afebrile"
+        "status": "Afebrile",
+        "parameter": "Body Temperature",
+        "referenceRange": "36.1-37.2"
       },
       {
         "name": "Respiratory Rate",
         "value": "16",
         "unit": "breaths/min",
-        "status": "Eupneic"
+        "status": "Eupneic",
+        "parameter": "Respiratory Rate",
+        "referenceRange": "12-20"
       },
       {
         "name": "Pain Score",
         "value": "2 / 10",
         "unit": "Numeric Rating Scale",
-        "status": "Comfortable"
+        "status": "Comfortable",
+        "parameter": "Pain Score",
+        "referenceRange": "0-3"
       }
     ],
     "preRecord": {
@@ -800,7 +1398,27 @@
       "cardiacAssessment": {
         "ecg": "Normal sinus rhythm, 72 BPM. Normal axis, no LVH criteria.",
         "echo": "Concentric LV remodeling absent; normal systolic function (LVEF 62%). Grade 1 diastolic relaxation impairment (age-consistent).",
-        "findings": "Stable cardiovascular profile."
+        "findings": "Stable cardiovascular profile.",
+        "ecgDetails": {
+          "rhythm": "Atrial Fibrillation (Controlled)",
+          "rate": "84 BPM",
+          "intervals": "QRS 96 ms, QTc 430 ms",
+          "axis": "Left Axis Deviation",
+          "interpretation": "Chronic AF with controlled ventricular rate."
+        },
+        "echoDetails": {
+          "ejectionFraction": 38,
+          "chamberSizes": "Mildly dilated LV and LA",
+          "valveFindings": "Moderate MR",
+          "wallMotion": "Anterior wall hypokinesia",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 24,
+          "events": [
+            "Baseline rate-controlled Atrial Fibrillation"
+          ]
+        }
       },
       "clinicalAssessment": "Hypertension is well controlled on Telmisartan 40mg. Lipid panel within target range (LDL 88 mg/dL). Advised low-salt Mediterranean-style Indian vegetarian diet and annual review."
     },
@@ -877,34 +1495,90 @@
         "investigation": "Chest CT with Contrast + Digital Chest Radiograph (PA & Oblique)",
         "date": "15 November 2026",
         "findings": "Undisplaced fractures of the right 4th and 5th ribs along lateral arch. No pneumothorax, hemothorax, or pulmonary contusion. Normal mediastinal contours.",
-        "impression": "Isolated blunt thoracic trauma with closed undisplaced right 4th and 5th rib fractures without pleural violation."
+        "impression": "Isolated blunt thoracic trauma with closed undisplaced right 4th and 5th rib fractures without pleural violation.",
+        "studyName": "Chest X-Ray PA & Left Knee AP",
+        "radiologist": "Dr. Meera Nair, MD (Radiology)",
+        "priorComparison": "Mild cardiomegaly unchanged from Aug 2026 baseline.",
+        "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3EChest%20PA%20%2B%20Left%20Knee%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E22%20Nov%202026%20%7C%20Cardiology%20%2B%20Ortho%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EMild%20Cardiomegaly%3B%20No%20Acute%20Pulmonary%20Edema%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
       },
       "laboratory": {
         "cbc": [
           {
             "parameter": "Hemoglobin",
-            "value": "14.1 g/dL",
-            "status": "Normal"
+            "value": "11.2",
+            "unit": "g/dL",
+            "referenceRange": "13.0-17.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "34.0",
+            "unit": "%",
+            "referenceRange": "38.0-50.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "RBC",
+            "value": "3.95",
+            "unit": "million/uL",
+            "referenceRange": "4.5-5.9",
+            "status": "Low"
           },
           {
             "parameter": "WBC",
-            "value": "9,600 /µL",
-            "status": "Normal"
+            "value": "12400",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "High"
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "76",
+            "unit": "%",
+            "referenceRange": "40-70",
+            "status": "High"
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "16",
+            "unit": "%",
+            "referenceRange": "20-40",
+            "status": "Low"
           },
           {
             "parameter": "Platelets",
-            "value": "235,000 /µL",
+            "value": "198000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
             "status": "Normal"
           },
           {
-            "parameter": "Troponin I (High Sens)",
-            "value": "< 0.01 ng/mL",
-            "status": "Negative for myocardial injury"
+            "parameter": "MCV",
+            "value": "86.1",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
           },
           {
-            "parameter": "Creatinine",
-            "value": "0.92 mg/dL",
+            "parameter": "MCH",
+            "value": "28.4",
+            "unit": "pg",
+            "referenceRange": "27-33",
             "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "32.9",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "14.8",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
+            "status": "High"
           }
         ],
         "electrolytes": [
@@ -928,12 +1602,94 @@
             "value": "pH 7.41, PaO2 84 mmHg, PaCO2 38",
             "status": "Adequate Oxygenation"
           }
+        ],
+        "dateTime": "2026-11-22 07:45",
+        "coagulation": [
+          {
+            "parameter": "PT",
+            "value": "16.8",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "High"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.5",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "High"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "34.0",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "chemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "198",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "High"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "136",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "5.8",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Critical"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "1.7",
+            "unit": "mg/dL",
+            "referenceRange": "0.7-1.3",
+            "status": "High"
+          },
+          {
+            "parameter": "ALT (SGPT)",
+            "value": "42",
+            "unit": "U/L",
+            "referenceRange": "7-56",
+            "status": "Normal"
+          }
         ]
       },
       "cardiacAssessment": {
         "ecgDate": "15 November 2026",
         "ecgFindings": "Normal sinus rhythm, 88 BPM. Serial Troponin-I negative at 0h and 6h ruling out myocardial contusion.",
-        "monitoring": "Continuous SpO2 and rhythm monitoring during inpatient admission."
+        "monitoring": "Continuous SpO2 and rhythm monitoring during inpatient admission.",
+        "ecgDetails": {
+          "rhythm": "Atrial Fibrillation with RVR",
+          "rate": "118 BPM",
+          "intervals": "QRS 98 ms, QTc 445 ms",
+          "axis": "Left Axis Deviation",
+          "interpretation": "AF with rapid ventricular response; rate-control IV diltiazem initiated."
+        },
+        "echoDetails": {
+          "ejectionFraction": 36,
+          "chamberSizes": "Dilated LV/LA",
+          "valveFindings": "Moderate MR, mild TR",
+          "wallMotion": "Global LV hypokinesia",
+          "pericardialEffusion": "Trace"
+        },
+        "telemetry": {
+          "durationHours": 72,
+          "events": [
+            "AF with RVR (118-132 BPM) on Day 1",
+            "Non-sustained VT (4 beats) overnight"
+          ]
+        }
       },
       "diagnosis": {
         "primary": "Closed undisplaced right 4th and 5th rib fractures due to blunt chest trauma",
@@ -949,13 +1705,50 @@
         "postopCBC": [
           {
             "parameter": "Hemoglobin",
-            "value": "13.9 g/dL",
-            "status": "Stable"
+            "value": "10.8",
+            "unit": "g/dL",
+            "referenceRange": "13.0-17.0",
+            "status": "Low"
           },
           {
             "parameter": "WBC",
-            "value": "7,800 /µL",
+            "value": "10200",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
             "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "192000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          }
+        ],
+        "postopDateTime": "2026-11-23 07:30",
+        "postopCoagulation": [
+          {
+            "parameter": "INR",
+            "value": "1.3",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "High"
+          }
+        ],
+        "postopChemistry": [
+          {
+            "parameter": "Potassium",
+            "value": "5.2",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "High"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "1.5",
+            "unit": "mg/dL",
+            "referenceRange": "0.7-1.3",
+            "status": "High"
           }
         ]
       },
@@ -993,7 +1786,23 @@
         "Continue Telmisartan 40mg daily without pause",
         "Emergency visit if experiencing shortness of breath, sudden chest pain, or coughing up blood"
       ]
-    }
+    },
+    "uploadedDocuments": [
+      {
+        "documentId": "UPL-003-CARDIAC",
+        "title": "72-Hour Holter & Telemetry Strip",
+        "fileName": "PAT-2026-003_Telemetry.pdf",
+        "uploadedBy": "Cardiology ICU",
+        "uploadedAt": "23 Nov 2026, 09:00 AM",
+        "fileType": "application/pdf",
+        "fileSize": "210 KB",
+        "category": "cardiac",
+        "linkedReportId": "DOC-POST-2026-003",
+        "parseStatus": "parsed",
+        "notes": "Telemetry strip showing AF with RVR.",
+        "dataUrl": "/data/reports/PAT-2026-001_Post-Accident_Hospital_Report.pdf"
+      }
+    ]
   },
   "PAT-2026-004": {
     "id": "PAT-2026-004",
@@ -1020,37 +1829,49 @@
         "name": "Blood Pressure",
         "value": "120/78",
         "unit": "mmHg",
-        "status": "Normal"
+        "status": "Normal",
+        "parameter": "Blood Pressure",
+        "referenceRange": "90-120 / 60-80"
       },
       {
         "name": "Heart Rate",
         "value": "72",
         "unit": "BPM",
-        "status": "Normal Sinus"
+        "status": "Normal Sinus",
+        "parameter": "Heart Rate",
+        "referenceRange": "60-100"
       },
       {
         "name": "Oxygen Saturation",
         "value": "99%",
         "unit": "SpO2 on Room Air",
-        "status": "Optimal"
+        "status": "Optimal",
+        "parameter": "Oxygen Saturation",
+        "referenceRange": "95-100"
       },
       {
         "name": "Body Temperature",
         "value": "36.7 °C",
         "unit": "(98.0 °F)",
-        "status": "Afebrile"
+        "status": "Afebrile",
+        "parameter": "Body Temperature",
+        "referenceRange": "36.1-37.2"
       },
       {
         "name": "Respiratory Rate",
         "value": "15",
         "unit": "breaths/min",
-        "status": "Eupneic"
+        "status": "Eupneic",
+        "parameter": "Respiratory Rate",
+        "referenceRange": "12-20"
       },
       {
         "name": "Pain Score",
         "value": "1 / 10",
         "unit": "Numeric Rating Scale",
-        "status": "Minimal / Controlled"
+        "status": "Minimal / Controlled",
+        "parameter": "Pain Score",
+        "referenceRange": "0-3"
       }
     ],
     "preRecord": {
@@ -1121,7 +1942,25 @@
       "cardiacAssessment": {
         "ecg": "Normal sinus rhythm, 70 BPM. No ST-T wave abnormalities.",
         "echo": "Not clinically indicated.",
-        "findings": "Clear S1 S2, no gallops or murmurs."
+        "findings": "Clear S1 S2, no gallops or murmurs.",
+        "ecgDetails": {
+          "rhythm": "Normal Sinus Rhythm",
+          "rate": "78 BPM",
+          "intervals": "PR 148 ms, QRS 84 ms, QTc 410 ms",
+          "axis": "Normal",
+          "interpretation": "Normal ECG."
+        },
+        "echoDetails": {
+          "ejectionFraction": 60,
+          "chamberSizes": "Normal",
+          "valveFindings": "Normal",
+          "wallMotion": "Normal",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 0,
+          "events": []
+        }
       },
       "clinicalAssessment": "Glycemic management is exemplary: HbA1c is 6.3%. Kidney function, urine microalbumin, and retinal screening all negative. Continue Metformin 500mg BD. Routine review in 6 months."
     },
@@ -1198,33 +2037,82 @@
         "investigation": "Digital Radiograph Left Clavicle (AP and 20° Cranial view)",
         "date": "21 November 2026",
         "findings": "Comminuted midshaft fracture of the left clavicle with 100% displacement and 18mm shortening of fragments. Subclavian vessels and apical pleura clear.",
-        "impression": "Closed displaced comminuted midshaft left clavicle fracture (Allman Type I / Robinson 2B1)."
+        "impression": "Closed displaced comminuted midshaft left clavicle fracture (Allman Type I / Robinson 2B1).",
+        "studyName": "Chest X-Ray PA View",
+        "radiologist": "Dr. Kavita Iyer, MD (Radiology)",
+        "priorComparison": "Clear lung fields; no focal consolidation.",
+        "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3EChest%20X-Ray%20PA%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E23%20Nov%202026%20%7C%20Respiratory%20Triage%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EHyperinflated%20Lung%20Fields%3B%20No%20Pneumothorax%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
       },
       "laboratory": {
         "cbc": [
           {
             "parameter": "Hemoglobin",
-            "value": "13.2 g/dL",
+            "value": "13.1",
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "39.0",
+            "unit": "%",
+            "referenceRange": "36.0-46.0",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RBC",
+            "value": "4.55",
+            "unit": "million/uL",
+            "referenceRange": "4.0-5.2",
             "status": "Normal"
           },
           {
             "parameter": "WBC",
-            "value": "9,100 /µL",
+            "value": "10500",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
             "status": "Normal"
+          },
+          {
+            "parameter": "Eosinophils",
+            "value": "7",
+            "unit": "%",
+            "referenceRange": "1-4",
+            "status": "High"
           },
           {
             "parameter": "Platelets",
-            "value": "250,000 /µL",
+            "value": "280000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
             "status": "Normal"
           },
           {
-            "parameter": "Fasting Blood Glucose",
-            "value": "112 mg/dL",
-            "status": "Controlled"
+            "parameter": "MCV",
+            "value": "85.7",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
           },
           {
-            "parameter": "Serum Creatinine",
-            "value": "0.82 mg/dL",
+            "parameter": "MCH",
+            "value": "28.8",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "33.6",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "12.8",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
             "status": "Normal"
           }
         ],
@@ -1249,12 +2137,84 @@
             "value": "1.0",
             "status": "Normal"
           }
+        ],
+        "dateTime": "2026-11-23 14:20",
+        "coagulation": [
+          {
+            "parameter": "PT",
+            "value": "12.1",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.0",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "28.5",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "chemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "108",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "139",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.3",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "0.8",
+            "unit": "mg/dL",
+            "referenceRange": "0.6-1.1",
+            "status": "Normal"
+          }
         ]
       },
       "cardiacAssessment": {
         "ecgDate": "21 November 2026",
         "ecgFindings": "Normal sinus rhythm, 86 BPM. Preoperative cardiac clearance granted.",
-        "monitoring": "Routine perioperative anesthetic monitoring."
+        "monitoring": "Routine perioperative anesthetic monitoring.",
+        "ecgDetails": {
+          "rhythm": "Sinus Tachycardia",
+          "rate": "104 BPM",
+          "intervals": "PR 142 ms, QRS 84 ms, QTc 416 ms",
+          "axis": "Normal",
+          "interpretation": "Mild sinus tachycardia related to nebulized bronchodilator therapy."
+        },
+        "echoDetails": {
+          "ejectionFraction": 60,
+          "chamberSizes": "Normal",
+          "valveFindings": "Normal",
+          "wallMotion": "Normal",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 12,
+          "events": []
+        }
       },
       "diagnosis": {
         "primary": "Closed displaced comminuted midshaft fracture of the left clavicle",
@@ -1270,15 +2230,29 @@
         "postopCBC": [
           {
             "parameter": "Hemoglobin",
-            "value": "12.5 g/dL",
-            "status": "Stable post-op"
+            "value": "13.0",
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.5",
+            "status": "Normal"
           },
           {
             "parameter": "WBC",
-            "value": "8,700 /µL",
+            "value": "9200",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "272000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
             "status": "Normal"
           }
-        ]
+        ],
+        "postopDateTime": "2026-11-24 10:00",
+        "postopCoagulation": [],
+        "postopChemistry": []
       },
       "dischargeMeds": [
         {
@@ -1314,6 +2288,7 @@
         "Continue Metformin 500mg BD regularly",
         "Contact hospital immediately if experiencing fever, wound discharge, or tingling in the left fingers"
       ]
-    }
+    },
+    "uploadedDocuments": []
   }
 }
