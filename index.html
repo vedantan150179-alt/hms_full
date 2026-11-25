@@ -2468,12 +2468,6 @@
         }
       };
 
-      const printOnePageReport = () => {
-        document.body.classList.add("printing-one-page");
-        window.print();
-        setTimeout(() => document.body.classList.remove("printing-one-page"), 500);
-      };
-
       // Gemini Clinical AI Layer State
       const [aiAnalysis, setAiAnalysis] = useState(null);
       const [aiLoading, setAiLoading] = useState(false);
@@ -3104,14 +3098,6 @@
                   >
                     <span>{isGeneratingPdf ? "⏳" : "⬇️"}</span>
                     <span>{isGeneratingPdf ? "Generating PDF..." : "Download PDF"}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={printOnePageReport}
-                    className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <span>🖨️</span>
-                    <span>Print / Save PDF</span>
                   </button>
                 </div>
               </div>
