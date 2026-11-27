@@ -76,6 +76,152 @@ const server = http.createServer((req, res) => {
     return res.end(JSON.stringify(logs));
   }
 
+  // API: Persist new Doctor / Staff user to hospital_data.json and hms_data.js
+  if (req.url === '/api/staff/add' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const newUser = JSON.parse(body || '{}');
+        const username = String(newUser.username || '').trim().toLowerCase();
+        const password = String(newUser.password || '').trim();
+        const role = String(newUser.role || 'Doctor').trim();
+        const name = String(newUser.name || '').trim();
+        const dept = String(newUser.dept || '').trim();
+
+        if (!username || !password || !name) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Username, password, and name are required.' }));
+        }
+
+        const hospPath = path.join(DATA_DIR, 'hospital_data.json');
+        const hospital = loadJsonFile('hospital_data.json', { auth: { users: [] } });
+        if (!hospital.auth) hospital.auth = { users: [] };
+        if (!Array.isArray(hospital.auth.users)) hospital.auth.users = [];
+
+        const exists = hospital.auth.users.some(u => String(u.username || '').toLowerCase() === username);
+        if (exists) {
+          res.writeHead(409, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Username already exists.' }));
+        }
+
+        const userRecord = { username, password, role, name, dept };
+        hospital.auth.users.push(userRecord);
+        fs.writeFileSync(hospPath, JSON.stringify(hospital, null, 2));
+
+        // Sync INITIAL_HOSPITAL_DATA inside hms_data.js if present
+        const hmsPath = path.join(DATA_DIR, 'hms_data.js');
+        if (fs.existsSync(hmsPath)) {
+          let hmsText = fs.readFileSync(hmsPath, 'utf8');
+          const startM = '  INITIAL_HOSPITAL_DATA: ';
+          const endM = ',\n  CARD_PATIENT_MAPPING:';
+          const si = hmsText.indexOf(startM);
+          const ei = hmsText.indexOf(endM);
+          if (si !== -1 && ei !== -1) {
+            hmsText = hmsText.slice(0, si + startM.length) + JSON.stringify(hospital, null, 2) + hmsText.slice(ei);
+            fs.writeFileSync(hmsPath, hmsText);
+          }
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, user: userRecord }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Add New Patient Record (persists to patients.json and hms_data.js)
+  if (req.url === '/api/patients/add' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const newPatient = JSON.parse(body || '{}');
+        const pid = String(newPatient.id || '').trim().toUpperCase();
+        if (!pid || !newPatient.name) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Patient ID and name are required.' }));
+        }
+
+        const patientsPath = path.join(DATA_DIR, 'patients.json');
+        const patients = loadJsonFile('patients.json', {});
+        if (patients[pid]) {
+          res.writeHead(409, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: `Patient ID ${pid} already exists.` }));
+        }
+
+        const record = { ...newPatient, id: pid };
+        patients[pid] = record;
+        fs.writeFileSync(patientsPath, JSON.stringify(patients, null, 2));
+
+        const hmsPath = path.join(DATA_DIR, 'hms_data.js');
+        if (fs.existsSync(hmsPath)) {
+          let hmsText = fs.readFileSync(hmsPath, 'utf8');
+          const startM = '  INITIAL_PATIENT_RECORDS: ';
+          const endM = ',\n  INITIAL_AUDIT_LOGS:';
+          const si = hmsText.indexOf(startM);
+          const ei = hmsText.indexOf(endM);
+          if (si !== -1 && ei !== -1) {
+            hmsText = hmsText.slice(0, si + startM.length) + JSON.stringify(patients, null, 2) + hmsText.slice(ei);
+            fs.writeFileSync(hmsPath, hmsText);
+          }
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, patient: record }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Assign Doctor to Patient (persists to patients.json and hms_data.js)
+  if (req.url === '/api/patients/assign-doctor' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const payload = JSON.parse(body || '{}');
+        const pid = String(payload.patientId || '').trim().toUpperCase();
+        const patientsPath = path.join(DATA_DIR, 'patients.json');
+        const patients = loadJsonFile('patients.json', {});
+        if (!pid || !patients[pid]) {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Patient not found.' }));
+        }
+
+        patients[pid].assignedDoctorUsername = payload.assignedDoctorUsername || '';
+        patients[pid].assignedDoctorName = payload.assignedDoctorName || '';
+        fs.writeFileSync(patientsPath, JSON.stringify(patients, null, 2));
+
+        const hmsPath = path.join(DATA_DIR, 'hms_data.js');
+        if (fs.existsSync(hmsPath)) {
+          let hmsText = fs.readFileSync(hmsPath, 'utf8');
+          const startM = '  INITIAL_PATIENT_RECORDS: ';
+          const endM = ',\n  INITIAL_AUDIT_LOGS:';
+          const si = hmsText.indexOf(startM);
+          const ei = hmsText.indexOf(endM);
+          if (si !== -1 && ei !== -1) {
+            hmsText = hmsText.slice(0, si + startM.length) + JSON.stringify(patients, null, 2) + hmsText.slice(ei);
+            fs.writeFileSync(hmsPath, hmsText);
+          }
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, patient: patients[pid] }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
   // API: List reports inside /data/reports
   if (req.url === '/api/data/reports') {
     const repDir = path.join(DATA_DIR, 'reports');

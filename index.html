@@ -123,8 +123,36 @@
       const [selectedRole, setSelectedRole] = useState("Doctor");
       const [sidebarTab, setSidebarTab] = useState("overview"); // 'overview' | 'patients' | 'records' | 'rooms' | 'departments' | 'appointments' | 'emergency' | 'staff' | 'logs' | 'settings'
 
-      // Dynamic Patient Records (Allows Admin Delete & Edit)
-      const [patientRecords, setPatientRecords] = useState(INITIAL_PATIENT_RECORDS);
+      // Dynamic Patient Records (Persisted in localStorage + server patients.json)
+      const [patientRecords, setPatientRecords] = useState(() => {
+        try {
+          const saved = JSON.parse(localStorage.getItem("pulsecare_patient_records") || "{}");
+          return { ...INITIAL_PATIENT_RECORDS, ...(saved && typeof saved === "object" ? saved : {}) };
+        } catch (e) {
+          return INITIAL_PATIENT_RECORDS;
+        }
+      });
+
+      useEffect(() => {
+        try {
+          localStorage.setItem("pulsecare_patient_records", JSON.stringify(patientRecords));
+        } catch (e) {}
+      }, [patientRecords]);
+
+      // Access Control Helper: Doctor sees only their assigned patients (or unassigned legacy records); Admin/Receptionist/EMT have role-appropriate visibility
+      const canUserAccessPatient = (p, currentUser) => {
+        if (!p || !currentUser) return false;
+        if (currentUser.role === "Admin") return true;
+        if (currentUser.role === "Receptionist") return true;
+        if (currentUser.role === "EMT") return true;
+        if (currentUser.role === "Doctor") {
+          if (p.assignedDoctorUsername) {
+            return String(p.assignedDoctorUsername).toLowerCase() === String(currentUser.username || "").toLowerCase();
+          }
+          return true;
+        }
+        return false;
+      };
 
       // Dynamic Rooms & Beds (Admins & Receptionists can add/allocate beds & rooms)
       const [rooms, setRooms] = useState(MOCK_DATA.rooms);
@@ -132,15 +160,41 @@
       // Dynamic Clinical Departments (Admins can add doctors & assign head/doctors)
       const [departments, setDepartments] = useState(MOCK_DATA.departments);
 
-      // Dynamic Staff / Doctors List (Admins can add new doctors & staff)
-      const [staffUsers, setStaffUsers] = useState(MOCK_DATA.auth.users);
+      // Dynamic Staff / Doctors List (Admins can add new doctors & staff; persisted in localStorage + server)
+      const [staffUsers, setStaffUsers] = useState(() => {
+        try {
+          const saved = JSON.parse(localStorage.getItem("pulsecare_staff_users") || "[]");
+          const base = MOCK_DATA.auth.users || [];
+          const seen = new Set(base.map(u => String(u.username || "").toLowerCase()));
+          const merged = [...base];
+          if (Array.isArray(saved)) {
+            saved.forEach(u => {
+              const uname = String(u?.username || "").toLowerCase();
+              if (uname && !seen.has(uname)) {
+                seen.add(uname);
+                merged.push(u);
+              }
+            });
+          }
+          return merged;
+        } catch (e) {
+          return MOCK_DATA.auth.users;
+        }
+      });
+
+      useEffect(() => {
+        try {
+          localStorage.setItem("pulsecare_staff_users", JSON.stringify(staffUsers));
+        } catch (e) {}
+      }, [staffUsers]);
 
       // Access & Audit Log System
       const [auditLogs, setAuditLogs] = useState(INITIAL_AUDIT_LOGS);
 
-      // Modals for Adding Rooms/Beds and Doctors
+      // Modals for Adding Rooms/Beds, Doctors, and New Patients
       const [showAddRoomModal, setShowAddRoomModal] = useState(false);
       const [showAddDoctorModal, setShowAddDoctorModal] = useState(false);
+      const [showAddPatientModal, setShowAddPatientModal] = useState(false);
 
       // Patient Record Flow State
       const [patientIdInput, setPatientIdInput] = useState("");
@@ -227,6 +281,11 @@
         let targetRecord = patientRecords[targetId] || patientRecords["PAT-2026-001"];
 
         if (targetRecord) {
+          if (!canUserAccessPatient(targetRecord, user)) {
+            setLookupError(`Access Restricted: ${targetRecord.id} is assigned exclusively to ${targetRecord.assignedDoctorName || targetRecord.assignedDoctorUsername}.`);
+            logAccess("PATIENT_ACCESS_DENIED", `Doctor ${user?.name} attempted RFID lookup for restricted patient ${targetRecord.id}`);
+            return;
+          }
           const userRole = user?.role;
           // If logged in as EMT or Doctor, trigger Emergency RFID Direct Bypass Modal with Warning & Audit Trail
           if (userRole === "EMT" || userRole === "Doctor") {
@@ -280,7 +339,7 @@
           return;
         }
 
-        const validUser = MOCK_DATA.auth.users.find(
+        const validUser = staffUsers.find(
           u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
         );
 
@@ -316,6 +375,11 @@
         }
 
         if (targetRecord) {
+          if (!canUserAccessPatient(targetRecord, user)) {
+            setLookupError(`Access Restricted: ${targetRecord.id} is assigned exclusively to ${targetRecord.assignedDoctorName || targetRecord.assignedDoctorUsername}.`);
+            logAccess("PATIENT_ACCESS_DENIED", `Doctor ${user?.name} attempted lookup for restricted patient ${targetRecord.id}`);
+            return;
+          }
           setLookupError("");
           setSelectedPatientId(targetRecord.id);
           setIsPinVerified(false);
@@ -404,6 +468,101 @@
 
         setEditingPatient(null);
         showToast(`Record ${updatedRecord.id} successfully updated.`, "success");
+      };
+
+      // DOCTOR / ADMIN / EMT (EMERGENCY ONLY): Add New Patient
+      const handleAddNewPatient = (newPatient) => {
+        const role = user?.role;
+        if (role !== "Admin" && role !== "Doctor" && role !== "EMT") {
+          alert("Unauthorized: Only Doctors, Admins, or EMTs (in emergency cases) can add new patients.");
+          return;
+        }
+        if (role === "EMT" && !newPatient.isEmergency) {
+          alert("EMT intake is permitted for active Emergency cases only.");
+          return;
+        }
+
+        // If a Doctor adds the patient, strictly assign to that Doctor only
+        const finalAssignedUsername = role === "Doctor"
+          ? user.username
+          : (newPatient.assignedDoctorUsername || "");
+        const finalAssignedName = role === "Doctor"
+          ? user.name
+          : (newPatient.assignedDoctorName || "");
+
+        const recordToSave = {
+          ...newPatient,
+          assignedDoctorUsername: finalAssignedUsername,
+          assignedDoctorName: finalAssignedName,
+          createdBy: `${user?.name || "Staff"} (${role})`,
+          createdAt: new Date().toLocaleString()
+        };
+
+        setPatientRecords(prev => {
+          const updated = { ...prev, [recordToSave.id]: recordToSave };
+          try { localStorage.setItem("pulsecare_patient_records", JSON.stringify(updated)); } catch (e) {}
+          return updated;
+        });
+
+        fetch("/api/patients/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(recordToSave)
+        }).catch(() => {});
+
+        logAccess(
+          recordToSave.isEmergency ? "EMERGENCY_PATIENT_ADDED" : "PATIENT_ADDED",
+          `${role} ${user?.name} added patient ${recordToSave.id} (${recordToSave.name})` +
+          (finalAssignedName ? ` assigned to ${finalAssignedName}` : "")
+        );
+        showToast(`Patient ${recordToSave.name} (${recordToSave.id}) added${finalAssignedName ? ` — Assigned to ${finalAssignedName}` : ""}!`, "success");
+        setShowAddPatientModal(false);
+      };
+
+      // RECEPTIONIST & ADMIN: Assign or Reassign Doctor to a Patient
+      const handleAssignDoctor = (patientId, doctorUsername) => {
+        const role = user?.role;
+        if (role !== "Admin" && role !== "Receptionist") {
+          alert("Unauthorized: Only Receptionists and Admins can assign doctors.");
+          return;
+        }
+        const docUser = staffUsers.find(u => String(u.username || "").toLowerCase() === String(doctorUsername || "").toLowerCase());
+        const assignedUsername = docUser ? docUser.username : "";
+        const assignedName = docUser ? docUser.name : "";
+
+        setPatientRecords(prev => {
+          const existing = prev[patientId];
+          if (!existing) return prev;
+          const updated = {
+            ...prev,
+            [patientId]: {
+              ...existing,
+              assignedDoctorUsername: assignedUsername,
+              assignedDoctorName: assignedName
+            }
+          };
+          try { localStorage.setItem("pulsecare_patient_records", JSON.stringify(updated)); } catch (e) {}
+          return updated;
+        });
+
+        fetch("/api/patients/assign-doctor", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            patientId,
+            assignedDoctorUsername: assignedUsername,
+            assignedDoctorName: assignedName
+          })
+        }).catch(() => {});
+
+        logAccess(
+          "DOCTOR_ASSIGNED_TO_PATIENT",
+          `${role} ${user?.name} assigned ${assignedName || "Unassigned"} to patient ${patientId}`
+        );
+        showToast(
+          assignedName ? `Assigned ${assignedName} to ${patientId}` : `Cleared doctor assignment for ${patientId}`,
+          "success"
+        );
       };
 
       // Add New Document to Patient Record (via Browse or Drag-and-Drop)
@@ -589,6 +748,9 @@
                 onEditPatient={(p) => setEditingPatient(p)}
                 onOpenAddRoom={() => setShowAddRoomModal(true)}
                 onOpenAddDoctor={() => setShowAddDoctorModal(true)}
+                onOpenAddPatient={() => setShowAddPatientModal(true)}
+                onAssignDoctor={handleAssignDoctor}
+                canUserAccessPatient={canUserAccessPatient}
                 auditLogs={auditLogs}
                 esp32Status={esp32Status}
               />
@@ -604,6 +766,9 @@
                 esp32Status={esp32Status}
                 isScanningAnimation={isScanningAnimation}
                 lastCardScan={lastCardScan}
+                patientRecords={patientRecords}
+                user={user}
+                canUserAccessPatient={canUserAccessPatient}
                 onSimulateScan={() => {
                   setPatientIdInput("PAT-2026-001");
                   const targetRecord = patientRecords["PAT-2026-001"];
@@ -665,6 +830,17 @@
             />
           )}
 
+          {/* DOCTOR, ADMIN & EMT (EMERGENCY): Add New Patient Modal */}
+          {showAddPatientModal && (user?.role === "Admin" || user?.role === "Doctor" || user?.role === "EMT") && (
+            <AddNewPatientModal
+              user={user}
+              staffUsers={staffUsers}
+              existingIds={Object.keys(patientRecords)}
+              onClose={() => setShowAddPatientModal(false)}
+              onAddPatient={handleAddNewPatient}
+            />
+          )}
+
           {/* ADMIN & RECEPTIONIST: Add Room & Bed Modal */}
           {showAddRoomModal && (
             <AddRoomBedModal
@@ -685,9 +861,19 @@
           {showAddDoctorModal && user?.role === "Admin" && (
             <AddDoctorModal
               departments={departments}
+              existingUsernames={staffUsers.map(u => String(u.username || "").toLowerCase())}
               onClose={() => setShowAddDoctorModal(false)}
               onAddDoctor={(newDoc) => {
-                setStaffUsers(prev => [...prev, newDoc]);
+                setStaffUsers(prev => {
+                  const updated = [...prev, newDoc];
+                  try { localStorage.setItem("pulsecare_staff_users", JSON.stringify(updated)); } catch (e) {}
+                  return updated;
+                });
+                fetch("/api/staff/add", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(newDoc)
+                }).catch(() => {});
                 // Increment doctor count in the assigned department
                 setDepartments(prev => prev.map(d => {
                   if (d.name === newDoc.dept) {
@@ -697,9 +883,9 @@
                 }));
                 logAccess(
                   "DOCTOR_STAFF_ADDED",
-                  `Administrator ${user?.name} added and assigned ${newDoc.name} to ${newDoc.dept}`
+                  `Administrator ${user?.name} added ${newDoc.role} ${newDoc.name} (${newDoc.username}) to ${newDoc.dept}`
                 );
-                showToast(`Dr. ${newDoc.name} assigned to ${newDoc.dept}!`, "success");
+                showToast(`${newDoc.name} (${newDoc.role}) saved and assigned to ${newDoc.dept}!`, "success");
                 setShowAddDoctorModal(false);
               }}
             />
@@ -937,6 +1123,9 @@
       onEditPatient,
       onOpenAddRoom,
       onOpenAddDoctor,
+      onOpenAddPatient,
+      onAssignDoctor,
+      canUserAccessPatient,
       auditLogs,
       esp32Status
     }) {
@@ -1052,6 +1241,19 @@
 
                 {(userRole === "Admin" || userRole === "Doctor" || userRole === "EMT") && (
                   <button
+                    onClick={onOpenAddPatient}
+                    className={`py-2.5 px-3.5 text-white rounded-xl text-xs font-semibold shadow-sm flex items-center gap-1.5 ${
+                      userRole === "EMT"
+                        ? "bg-rose-600 hover:bg-rose-700"
+                        : "bg-emerald-600 hover:bg-emerald-700"
+                    }`}
+                  >
+                    <span>{userRole === "EMT" ? "🚨 Emergency Add Patient" : "+ Add New Patient"}</span>
+                  </button>
+                )}
+
+                {(userRole === "Admin" || userRole === "Doctor" || userRole === "EMT") && (
+                  <button
                     onClick={onNavigateRecords}
                     className="py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-md shadow-blue-500/20 flex items-center justify-center gap-2"
                   >
@@ -1068,6 +1270,10 @@
               <DashboardPatientsTab 
                 patientRecords={patientRecords} 
                 user={user}
+                staffUsers={staffUsers}
+                canUserAccessPatient={canUserAccessPatient}
+                onOpenAddPatient={onOpenAddPatient}
+                onAssignDoctor={onAssignDoctor}
                 onSelectPatient={onNavigateRecords}
                 onDeletePatient={onDeletePatient}
                 onEditPatient={onEditPatient}
@@ -1164,30 +1370,60 @@
     }
 
     // ==========================================
-    // 3B. PATIENTS TAB (With Admin Edit/Delete & Receptionist Intake)
+    // 3B. PATIENTS TAB (Role-Scoped Visibility, Add Patient & Doctor Assignment)
     // ==========================================
-    function DashboardPatientsTab({ patientRecords, user, onSelectPatient, onDeletePatient, onEditPatient }) {
-      const patientsList = Object.values(patientRecords);
+    function DashboardPatientsTab({
+      patientRecords,
+      user,
+      staffUsers = [],
+      canUserAccessPatient,
+      onOpenAddPatient,
+      onAssignDoctor,
+      onSelectPatient,
+      onDeletePatient,
+      onEditPatient
+    }) {
       const userRole = user?.role || "Doctor";
+      const doctorsList = staffUsers.filter(u => u.role === "Doctor");
+      const patientsList = Object.values(patientRecords).filter(p =>
+        canUserAccessPatient ? canUserAccessPatient(p, user) : true
+      );
 
       return (
         <div className="glass-card rounded-2xl p-6 border border-slate-200 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-bold text-slate-900">Patient Directory</h2>
-              <p className="text-xs text-slate-500">Master patient index with identification records</p>
+              <p className="text-xs text-slate-500">
+                {userRole === "Doctor"
+                  ? "Showing patients assigned to you & shared baseline records"
+                  : userRole === "Receptionist"
+                  ? "Master patient index — assign doctors & manage intake desk"
+                  : userRole === "EMT"
+                  ? "Emergency triage directory — Emergency intake enabled"
+                  : "Full Administrator Master Patient Index"}
+              </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {userRole === "Admin" && (
                 <span className="text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200 px-3 py-1.5 rounded-xl">
-                  Admin Controls Active: Alter / Delete Enabled
+                  Admin Controls Active
                 </span>
               )}
-              {userRole === "Receptionist" && (
-                <button 
-                  onClick={() => alert("New Patient Intake Flow: Enter patient demographics and assign initial bed allocation.")}
-                  className="text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-xl shadow-sm">
-                  + New Patient Intake & Bed Assign
+              {(userRole === "Admin" || userRole === "Doctor") && (
+                <button
+                  onClick={onOpenAddPatient}
+                  className="text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>+ Add New Patient</span>
+                </button>
+              )}
+              {userRole === "EMT" && (
+                <button
+                  onClick={onOpenAddPatient}
+                  className="text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>🚨 Emergency Patient Intake</span>
                 </button>
               )}
             </div>
@@ -1201,6 +1437,7 @@
                   <th className="py-3 px-4">Full Name</th>
                   <th className="py-3 px-4">Age / Sex</th>
                   <th className="py-3 px-4">Blood Group</th>
+                  <th className="py-3 px-4">Assigned Doctor</th>
                   <th className="py-3 px-4">Current Conditions</th>
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
@@ -1208,14 +1445,21 @@
               <tbody className="divide-y divide-slate-100">
                 {patientsList.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-8 text-slate-400">
-                      No patient records remaining in database.
+                    <td colSpan="7" className="text-center py-8 text-slate-400">
+                      No patient records available for your account.
                     </td>
                   </tr>
                 ) : (
                   patientsList.map((p) => (
                     <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-3.5 px-4 font-mono font-bold text-blue-700">{p.id}</td>
+                      <td className="py-3.5 px-4 font-mono font-bold text-blue-700">
+                        <div>{p.id}</div>
+                        {p.isEmergency && (
+                          <span className="inline-block mt-0.5 text-[9px] font-black uppercase bg-rose-100 text-rose-800 border border-rose-200 px-1.5 py-0.5 rounded">
+                            🚨 Emergency
+                          </span>
+                        )}
+                      </td>
                       <td className="py-3.5 px-4 font-semibold text-slate-900">{p.name}</td>
                       <td className="py-3.5 px-4">{p.age} / {p.sex}</td>
                       <td className="py-3.5 px-4">
@@ -1223,10 +1467,34 @@
                           {p.bloodGroup}
                         </span>
                       </td>
+                      <td className="py-3.5 px-4">
+                        {(userRole === "Admin" || userRole === "Receptionist") ? (
+                          <select
+                            value={p.assignedDoctorUsername || ""}
+                            onChange={(e) => onAssignDoctor && onAssignDoctor(p.id, e.target.value)}
+                            className="text-xs px-2 py-1 rounded-lg border border-slate-200 bg-white font-medium text-slate-800 max-w-[185px]"
+                          >
+                            <option value="">-- Unassigned (Shared) --</option>
+                            {doctorsList.map((d) => (
+                              <option key={d.username} value={d.username}>
+                                {d.name}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className={`text-[11px] font-semibold px-2 py-0.5 rounded border ${
+                            p.assignedDoctorName
+                              ? "bg-blue-50 text-blue-800 border-blue-200"
+                              : "bg-slate-50 text-slate-500 border-slate-200"
+                          }`}>
+                            {p.assignedDoctorName || "Shared / Unassigned"}
+                          </span>
+                        )}
+                      </td>
                       <td className="py-3.5 px-4 max-w-xs truncate text-slate-600">
                         {p.currentConditions?.[0] || 'No primary condition'}
                       </td>
-                      <td className="py-3.5 px-4 text-right space-x-2">
+                      <td className="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
                         {/* Doctors, Admins and EMTs can view EMR */}
                         {(userRole === "Admin" || userRole === "Doctor" || userRole === "EMT") && (
                           <button 
@@ -1862,8 +2130,14 @@
       esp32Status,
       isScanningAnimation,
       lastCardScan,
+      patientRecords = {},
+      user,
+      canUserAccessPatient,
       onSimulateScan
     }) {
+      const visiblePatients = Object.values(patientRecords).filter(p =>
+        canUserAccessPatient ? canUserAccessPatient(p, user) : true
+      );
       return (
         <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-8 screen-fade">
           <button 
@@ -1920,42 +2194,20 @@
                 <span className="text-[11px] text-slate-400 font-medium">Click ID to autofill lookup</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={() => setPatientIdInput("PAT-2026-001")}
-                  className="p-2 rounded-lg bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 text-left transition-all"
-                >
-                  <span className="font-mono font-bold text-blue-700 block">PAT-2026-001</span>
-                  <span className="text-[11px] text-slate-700 truncate block">Manas Kumar Singh</span>
-                  <span className="text-[10px] text-slate-400 block">Femur CRIF (Ranchi)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPatientIdInput("PAT-2026-002")}
-                  className="p-2 rounded-lg bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 text-left transition-all"
-                >
-                  <span className="font-mono font-bold text-blue-700 block">PAT-2026-002</span>
-                  <span className="text-[11px] text-slate-700 truncate block">Priya Sharma</span>
-                  <span className="text-[10px] text-slate-400 block">Colles Fx (Jaipur)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPatientIdInput("PAT-2026-003")}
-                  className="p-2 rounded-lg bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 text-left transition-all"
-                >
-                  <span className="font-mono font-bold text-blue-700 block">PAT-2026-003</span>
-                  <span className="text-[11px] text-slate-700 truncate block">Rajesh V. Patel</span>
-                  <span className="text-[10px] text-slate-400 block">Rib Fx (Ahmedabad)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPatientIdInput("PAT-2026-004")}
-                  className="p-2 rounded-lg bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 text-left transition-all"
-                >
-                  <span className="font-mono font-bold text-blue-700 block">PAT-2026-004</span>
-                  <span className="text-[11px] text-slate-700 truncate block">Ananya Mukhopadhyay</span>
-                  <span className="text-[10px] text-slate-400 block">Clavicle ORIF (Kolkata)</span>
-                </button>
+                {visiblePatients.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setPatientIdInput(p.id)}
+                    className="p-2 rounded-lg bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 text-left transition-all"
+                  >
+                    <span className="font-mono font-bold text-blue-700 block">{p.id}</span>
+                    <span className="text-[11px] text-slate-700 truncate block">{p.name}</span>
+                    <span className="text-[10px] text-slate-400 truncate block">
+                      {p.assignedDoctorName ? `Dr: ${p.assignedDoctorName}` : (p.location || "Shared Record")}
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -4873,6 +5125,266 @@
     }
 
     // ==========================================
+    // 7B. ADD NEW PATIENT MODAL (Doctor, Admin & EMT Emergency Only)
+    // ==========================================
+    function AddNewPatientModal({ user, staffUsers = [], existingIds = [], onClose, onAddPatient }) {
+      const userRole = user?.role || "Doctor";
+      const doctorsList = staffUsers.filter(u => u.role === "Doctor");
+      const nextNum = existingIds.length + 1;
+      const suggestedId = `PAT-2026-${String(nextNum).padStart(3, "0")}`;
+
+      const [form, setForm] = useState({
+        id: suggestedId,
+        name: "",
+        age: "",
+        sex: "Male",
+        dob: "",
+        bloodGroup: "O Positive (O+)",
+        contact: "",
+        location: "India",
+        condition: "",
+        allergyName: "No Known Drug Allergies (NKDA)",
+        allergySeverity: "None Reported",
+        isEmergency: userRole === "EMT",
+        assignedDoctorUsername: userRole === "Doctor" ? (user?.username || "") : ""
+      });
+      const [formError, setFormError] = useState("");
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        const cleanId = form.id.trim().toUpperCase();
+        if (!cleanId || !form.name.trim()) {
+          setFormError("Patient ID and Full Name are required.");
+          return;
+        }
+        if (existingIds.map(x => x.toUpperCase()).includes(cleanId)) {
+          setFormError(`Patient ID "${cleanId}" already exists.`);
+          return;
+        }
+        if (userRole === "EMT" && !form.isEmergency) {
+          setFormError("EMT Specialists can only register active Emergency cases.");
+          return;
+        }
+
+        const chosenDoc = doctorsList.find(
+          d => String(d.username || "").toLowerCase() === String(form.assignedDoctorUsername || "").toLowerCase()
+        );
+
+        const newPatient = {
+          id: cleanId,
+          name: form.name.trim(),
+          age: form.age.trim() || "Unknown",
+          sex: form.sex,
+          dob: form.dob.trim() || "Not Recorded",
+          bloodGroup: form.bloodGroup,
+          location: form.location.trim() || "India",
+          contact: form.contact.trim() || "N/A",
+          isEmergency: !!form.isEmergency,
+          assignedDoctorUsername: userRole === "Doctor" ? user.username : (chosenDoc ? chosenDoc.username : ""),
+          assignedDoctorName: userRole === "Doctor" ? user.name : (chosenDoc ? chosenDoc.name : ""),
+          allergies: [
+            {
+              name: form.allergyName.trim() || "No Known Drug Allergies (NKDA)",
+              severity: form.allergySeverity,
+              reaction: "Documented at intake"
+            }
+          ],
+          currentConditions: form.condition.trim() ? [form.condition.trim()] : ["Initial Intake Evaluation"],
+          vitals: [
+            { name: "Blood Pressure", parameter: "Blood Pressure", value: "120/80", unit: "mmHg", referenceRange: "90-120 / 60-80", status: "Normal" },
+            { name: "Heart Rate", parameter: "Heart Rate", value: "78", unit: "BPM", referenceRange: "60-100", status: "Normal Sinus" },
+            { name: "Oxygen Saturation", parameter: "Oxygen Saturation", value: "98%", unit: "SpO2", referenceRange: "95-100", status: "Normal" }
+          ],
+          uploadedDocuments: []
+        };
+
+        onAddPatient(newPatient);
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm screen-fade">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-lg w-full border border-slate-200 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  {userRole === "EMT" ? "🚨 Emergency Patient Intake (EMT)" : "Add New Patient Record"}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {userRole === "Doctor"
+                    ? `Patient will be strictly assigned to ${user?.name}`
+                    : userRole === "EMT"
+                    ? "Permitted for active emergency cases only"
+                    : "Administrator Full Patient Intake & Assignment"}
+                </p>
+              </div>
+              <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+
+            {formError && (
+              <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                {formError}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Patient ID</label>
+                  <input
+                    type="text"
+                    required
+                    value={form.id}
+                    onChange={(e) => setForm({ ...form, id: e.target.value.toUpperCase() })}
+                    className="w-full px-3 py-2 border rounded-xl font-mono font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="e.g. Aarav Verma"
+                    className="w-full px-3 py-2 border rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Age</label>
+                  <input
+                    type="text"
+                    required
+                    value={form.age}
+                    onChange={(e) => setForm({ ...form, age: e.target.value })}
+                    placeholder="e.g. 34 years"
+                    className="w-full px-3 py-2 border rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Sex</label>
+                  <select
+                    value={form.sex}
+                    onChange={(e) => setForm({ ...form, sex: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-xl bg-white"
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Blood Group</label>
+                  <select
+                    value={form.bloodGroup}
+                    onChange={(e) => setForm({ ...form, bloodGroup: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-xl bg-white"
+                  >
+                    <option value="O Positive (O+)">O Positive (O+)</option>
+                    <option value="O Negative (O-)">O Negative (O-)</option>
+                    <option value="A Positive (A+)">A Positive (A+)</option>
+                    <option value="A Negative (A-)">A Negative (A-)</option>
+                    <option value="B Positive (B+)">B Positive (B+)</option>
+                    <option value="B Negative (B-)">B Negative (B-)</option>
+                    <option value="AB Positive (AB+)">AB Positive (AB+)</option>
+                    <option value="AB Negative (AB-)">AB Negative (AB-)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Date of Birth</label>
+                  <input
+                    type="text"
+                    value={form.dob}
+                    onChange={(e) => setForm({ ...form, dob: e.target.value })}
+                    placeholder="e.g. 12 Aug 1992"
+                    className="w-full px-3 py-2 border rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Contact Number</label>
+                  <input
+                    type="text"
+                    value={form.contact}
+                    onChange={(e) => setForm({ ...form, contact: e.target.value })}
+                    placeholder="e.g. 9876543210"
+                    className="w-full px-3 py-2 border rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Primary Condition / Chief Complaint</label>
+                <input
+                  type="text"
+                  required
+                  value={form.condition}
+                  onChange={(e) => setForm({ ...form, condition: e.target.value })}
+                  placeholder="e.g. Acute Chest Pain / Trauma Evaluation"
+                  className="w-full px-3 py-2 border rounded-xl"
+                />
+              </div>
+
+              {userRole === "Doctor" ? (
+                <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 font-semibold">
+                  Assigned Doctor: {user?.name} (Locked to your account)
+                </div>
+              ) : (
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Assign to Doctor (Optional)</label>
+                  <select
+                    value={form.assignedDoctorUsername}
+                    onChange={(e) => setForm({ ...form, assignedDoctorUsername: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-xl bg-white"
+                  >
+                    <option value="">-- Unassigned (Reception / Admin can assign later) --</option>
+                    {doctorsList.map((d) => (
+                      <option key={d.username} value={d.username}>{d.name} ({d.dept})</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <label className={`flex items-center gap-2 p-2.5 rounded-xl border ${form.isEmergency ? "bg-rose-50 border-rose-200 text-rose-900" : "bg-slate-50 border-slate-200 text-slate-700"}`}>
+                <input
+                  type="checkbox"
+                  checked={form.isEmergency}
+                  disabled={userRole === "EMT"}
+                  onChange={(e) => setForm({ ...form, isEmergency: e.target.checked })}
+                />
+                <span className="font-bold">
+                  🚨 Mark as Emergency Case {userRole === "EMT" ? "(Required for EMT Intake)" : ""}
+                </span>
+              </label>
+
+              <div className="pt-2 flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 border rounded-xl text-slate-600 font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className={`px-4 py-2 text-white rounded-xl font-semibold shadow ${
+                    userRole === "EMT" ? "bg-rose-600 hover:bg-rose-700" : "bg-emerald-600 hover:bg-emerald-700"
+                  }`}
+                >
+                  {userRole === "EMT" ? "Register Emergency Patient" : "Add Patient & Save"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
     // 8. EMERGENCY RFID BYPASS WARNING MODAL (EMT & DOCTORS)
     // ==========================================
     function EmergencyRfidWarningModal({ bypassData, user, onConfirm, onFallbackToPin, onCancel }) {
@@ -5057,18 +5569,29 @@
     // ==========================================
     // 10. ADMIN ONLY: ADD DOCTOR & ASSIGN DEPARTMENT MODAL
     // ==========================================
-    function AddDoctorModal({ departments, onClose, onAddDoctor }) {
+    function AddDoctorModal({ departments, existingUsernames = [], onClose, onAddDoctor }) {
       const [doctorData, setDoctorData] = useState({
-        username: "doctor_new",
+        username: "",
         password: "123",
         role: "Doctor",
-        name: "Dr. ",
+        name: "",
         dept: departments[0]?.name || "Orthopedics & Trauma Surgery"
       });
+      const [formError, setFormError] = useState("");
 
       const handleSubmit = (e) => {
         e.preventDefault();
-        onAddDoctor(doctorData);
+        const cleanUser = doctorData.username.trim().toLowerCase();
+        if (!cleanUser) {
+          setFormError("Please enter a valid username.");
+          return;
+        }
+        if (existingUsernames.includes(cleanUser)) {
+          setFormError(`Username "${cleanUser}" already exists. Choose a different username.`);
+          return;
+        }
+        setFormError("");
+        onAddDoctor({ ...doctorData, username: cleanUser });
       };
 
       return (
@@ -5076,15 +5599,21 @@
           <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full border border-purple-200 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-purple-100 pb-3">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Add Doctor & Assign Department</h3>
+                <h3 className="text-lg font-bold text-slate-900">Add Doctor / Staff & Assign Dept</h3>
                 <p className="text-xs text-purple-700 font-semibold">Strictly Admin Privileges Only</p>
               </div>
               <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
             </div>
 
+            {formError && (
+              <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                {formError}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Doctor Full Name & Title</label>
+                <label className="block font-semibold text-slate-700 mb-1">Full Name & Title</label>
                 <input
                   type="text"
                   required
@@ -5095,17 +5624,32 @@
                 />
               </div>
 
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Assign Clinical Department</label>
-                <select
-                  value={doctorData.dept}
-                  onChange={(e) => setDoctorData({ ...doctorData, dept: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-xl bg-purple-50/50 text-slate-800 font-medium"
-                >
-                  {departments.map((d, i) => (
-                    <option key={i} value={d.name}>{d.name} (Head: {d.head})</option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Staff Role</label>
+                  <select
+                    value={doctorData.role}
+                    onChange={(e) => setDoctorData({ ...doctorData, role: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-xl bg-white text-slate-800 font-medium"
+                  >
+                    <option value="Doctor">Doctor</option>
+                    <option value="Receptionist">Receptionist</option>
+                    <option value="EMT">EMT</option>
+                    <option value="Admin">Admin</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Clinical Department</label>
+                  <select
+                    value={doctorData.dept}
+                    onChange={(e) => setDoctorData({ ...doctorData, dept: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-xl bg-purple-50/50 text-slate-800 font-medium"
+                  >
+                    {departments.map((d, i) => (
+                      <option key={i} value={d.name}>{d.name}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

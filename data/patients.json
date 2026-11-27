@@ -2290,5 +2290,57 @@
       ]
     },
     "uploadedDocuments": []
+  },
+  "PAT-2026-006": {
+    "id": "PAT-2026-006",
+    "name": "sneha kumari",
+    "age": "20",
+    "sex": "Female",
+    "dob": "11 feb 2006",
+    "bloodGroup": "B Positive (B+)",
+    "location": "India",
+    "contact": "7054735426",
+    "isEmergency": false,
+    "assignedDoctorUsername": "doctor_strange",
+    "assignedDoctorName": "Dr. Stephen Strange, MD",
+    "allergies": [
+      {
+        "name": "No Known Drug Allergies (NKDA)",
+        "severity": "None Reported",
+        "reaction": "Documented at intake"
+      }
+    ],
+    "currentConditions": [
+      "PNEMONIA"
+    ],
+    "vitals": [
+      {
+        "name": "Blood Pressure",
+        "parameter": "Blood Pressure",
+        "value": "120/80",
+        "unit": "mmHg",
+        "referenceRange": "90-120 / 60-80",
+        "status": "Normal"
+      },
+      {
+        "name": "Heart Rate",
+        "parameter": "Heart Rate",
+        "value": "78",
+        "unit": "BPM",
+        "referenceRange": "60-100",
+        "status": "Normal Sinus"
+      },
+      {
+        "name": "Oxygen Saturation",
+        "parameter": "Oxygen Saturation",
+        "value": "98%",
+        "unit": "SpO2",
+        "referenceRange": "95-100",
+        "status": "Normal"
+      }
+    ],
+    "uploadedDocuments": [],
+    "createdBy": "Chief Operations Director (Admin)",
+    "createdAt": "27/11/2026, 10:27:58"
   }
 }
