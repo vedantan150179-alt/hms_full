@@ -109,11 +109,11 @@ const server = http.createServer((req, res) => {
         hospital.auth.users.push(userRecord);
         fs.writeFileSync(hospPath, JSON.stringify(hospital, null, 2));
 
-        // Sync INITIAL_HOSPITAL_DATA inside hms_data.js if present
+        // Sync MOCK_DATA inside hms_data.js if present
         const hmsPath = path.join(DATA_DIR, 'hms_data.js');
         if (fs.existsSync(hmsPath)) {
           let hmsText = fs.readFileSync(hmsPath, 'utf8');
-          const startM = '  INITIAL_HOSPITAL_DATA: ';
+          const startM = '  MOCK_DATA: ';
           const endM = ',\n  CARD_PATIENT_MAPPING:';
           const si = hmsText.indexOf(startM);
           const ei = hmsText.indexOf(endM);
@@ -214,6 +214,50 @@ const server = http.createServer((req, res) => {
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: true, patient: patients[pid] }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // API: Update Rooms & Bed Allocation (persists to hospital_data.json and hms_data.js)
+  if (req.url === '/api/rooms/update' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const payload = JSON.parse(body || '{}');
+        if (!Array.isArray(payload.rooms)) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'rooms array is required.' }));
+        }
+
+        const hospPath = path.join(DATA_DIR, 'hospital_data.json');
+        const hospital = loadJsonFile('hospital_data.json', {});
+        hospital.rooms = payload.rooms;
+        if (!hospital.stats) hospital.stats = {};
+        hospital.stats.totalBeds = payload.rooms.length;
+        hospital.stats.occupiedBeds = payload.rooms.filter(r => r.status === 'Occupied').length;
+        hospital.stats.availableBeds = payload.rooms.filter(r => r.status === 'Available').length;
+        fs.writeFileSync(hospPath, JSON.stringify(hospital, null, 2));
+
+        const hmsPath = path.join(DATA_DIR, 'hms_data.js');
+        if (fs.existsSync(hmsPath)) {
+          let hmsText = fs.readFileSync(hmsPath, 'utf8');
+          const startM = '  MOCK_DATA: ';
+          const endM = ',\n  CARD_PATIENT_MAPPING:';
+          const si = hmsText.indexOf(startM);
+          const ei = hmsText.indexOf(endM);
+          if (si !== -1 && ei !== -1) {
+            hmsText = hmsText.slice(0, si + startM.length) + JSON.stringify(hospital, null, 2) + hmsText.slice(ei);
+            fs.writeFileSync(hmsPath, hmsText);
+          }
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, rooms: hospital.rooms, stats: hospital.stats }));
       } catch (err) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, error: err.message }));

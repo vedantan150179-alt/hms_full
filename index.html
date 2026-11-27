@@ -154,8 +154,29 @@
         return false;
       };
 
-      // Dynamic Rooms & Beds (Admins & Receptionists can add/allocate beds & rooms)
-      const [rooms, setRooms] = useState(MOCK_DATA.rooms);
+      // Dynamic Rooms & Beds (Admins & Receptionists can add/allocate/de-assign beds & rooms; persisted)
+      const [rooms, setRooms] = useState(() => {
+        try {
+          const saved = JSON.parse(localStorage.getItem("pulsecare_rooms") || "null");
+          if (Array.isArray(saved) && saved.length >= (MOCK_DATA.rooms?.length || 0)) {
+            return saved;
+          }
+        } catch (e) {}
+        return MOCK_DATA.rooms;
+      });
+
+      const updateRoomsAndSync = (updater) => {
+        setRooms(prev => {
+          const next = typeof updater === "function" ? updater(prev) : updater;
+          try { localStorage.setItem("pulsecare_rooms", JSON.stringify(next)); } catch (e) {}
+          fetch("/api/rooms/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ rooms: next })
+          }).catch(() => {});
+          return next;
+        });
+      };
 
       // Dynamic Clinical Departments (Admins can add doctors & assign head/doctors)
       const [departments, setDepartments] = useState(MOCK_DATA.departments);
@@ -470,11 +491,11 @@
         showToast(`Record ${updatedRecord.id} successfully updated.`, "success");
       };
 
-      // DOCTOR / ADMIN / EMT (EMERGENCY ONLY): Add New Patient
+      // DOCTOR / ADMIN / RECEPTIONIST / EMT (EMERGENCY ONLY): Add New Patient
       const handleAddNewPatient = (newPatient) => {
         const role = user?.role;
-        if (role !== "Admin" && role !== "Doctor" && role !== "EMT") {
-          alert("Unauthorized: Only Doctors, Admins, or EMTs (in emergency cases) can add new patients.");
+        if (role !== "Admin" && role !== "Doctor" && role !== "Receptionist" && role !== "EMT") {
+          alert("Unauthorized: Only Doctors, Receptionists, Admins, or EMTs (in emergency cases) can add new patients.");
           return;
         }
         if (role === "EMT" && !newPatient.isEmergency) {
@@ -738,7 +759,9 @@
                 setSidebarTab={setSidebarTab}
                 patientRecords={patientRecords}
                 rooms={rooms}
-                setRooms={setRooms}
+                setRooms={updateRoomsAndSync}
+                logAccess={logAccess}
+                showToast={showToast}
                 departments={departments}
                 setDepartments={setDepartments}
                 staffUsers={staffUsers}
@@ -830,8 +853,8 @@
             />
           )}
 
-          {/* DOCTOR, ADMIN & EMT (EMERGENCY): Add New Patient Modal */}
-          {showAddPatientModal && (user?.role === "Admin" || user?.role === "Doctor" || user?.role === "EMT") && (
+          {/* DOCTOR, ADMIN, RECEPTIONIST & EMT (EMERGENCY): Add New Patient Modal */}
+          {showAddPatientModal && (user?.role === "Admin" || user?.role === "Doctor" || user?.role === "Receptionist" || user?.role === "EMT") && (
             <AddNewPatientModal
               user={user}
               staffUsers={staffUsers}
@@ -846,7 +869,7 @@
             <AddRoomBedModal
               onClose={() => setShowAddRoomModal(false)}
               onAddRoom={(newRoom) => {
-                setRooms(prev => [...prev, newRoom]);
+                updateRoomsAndSync(prev => [...prev, newRoom]);
                 logAccess(
                   "ROOM_BED_ADDED",
                   `${user?.role} ${user?.name} added new bed allocation: ${newRoom.room} (${newRoom.ward} - ${newRoom.bed})`
@@ -1126,6 +1149,8 @@
       onOpenAddPatient,
       onAssignDoctor,
       canUserAccessPatient,
+      logAccess,
+      showToast,
       auditLogs,
       esp32Status
     }) {
@@ -1239,7 +1264,7 @@
                   </button>
                 )}
 
-                {(userRole === "Admin" || userRole === "Doctor" || userRole === "EMT") && (
+                {(userRole === "Admin" || userRole === "Doctor" || userRole === "Receptionist" || userRole === "EMT") && (
                   <button
                     onClick={onOpenAddPatient}
                     className={`py-2.5 px-3.5 text-white rounded-xl text-xs font-semibold shadow-sm flex items-center gap-1.5 ${
@@ -1265,7 +1290,7 @@
             </div>
 
             {/* TAB CONTENT RENDERING WITH ROLE PROTECTION */}
-            {sidebarTab === "overview" && <DashboardOverviewTab onNavigateRecords={onNavigateRecords} patientRecords={patientRecords} />}
+            {sidebarTab === "overview" && <DashboardOverviewTab onNavigateRecords={onNavigateRecords} patientRecords={patientRecords} rooms={rooms} />}
             {sidebarTab === "patients" && (
               <DashboardPatientsTab 
                 patientRecords={patientRecords} 
@@ -1283,8 +1308,12 @@
               <DashboardRoomsTab 
                 rooms={rooms}
                 setRooms={setRooms}
+                patientRecords={patientRecords}
+                user={user}
                 userRole={userRole} 
                 onOpenAddRoom={onOpenAddRoom}
+                logAccess={logAccess}
+                showToast={showToast}
               />
             )}
             {sidebarTab === "departments" && (
@@ -1324,13 +1353,17 @@
     // ==========================================
     // 3A. OVERVIEW TAB
     // ==========================================
-    function DashboardOverviewTab({ onNavigateRecords, patientRecords }) {
+    function DashboardOverviewTab({ onNavigateRecords, patientRecords, rooms = [] }) {
       const stats = MOCK_DATA.stats;
+      const totalBeds = rooms.length > 0 ? rooms.length : stats.totalBeds;
+      const occupiedBeds = rooms.length > 0 ? rooms.filter(r => r.status === "Occupied").length : stats.occupiedBeds;
+      const availableBeds = rooms.length > 0 ? rooms.filter(r => r.status === "Available").length : stats.availableBeds;
+      const occRate = totalBeds > 0 ? ((occupiedBeds / totalBeds) * 100).toFixed(1) : "0.0";
       const statCards = [
-        { label: "Total Hospital Beds", value: stats.totalBeds, icon: "🛏️", note: "Capacity across all wards" },
-        { label: "Occupied Beds", value: stats.occupiedBeds, icon: "👤", note: "71.6% occupancy rate" },
-        { label: "Available Beds", value: stats.availableBeds, icon: "✨", note: "Ready for triage intake" },
-        { label: "Patients Admitted Today", value: stats.admittedToday, icon: "📥", note: "Since 00:00 HRS" },
+        { label: "Total Hospital Beds", value: totalBeds, icon: "🛏️", note: "Capacity across all wards" },
+        { label: "Occupied Beds", value: occupiedBeds, icon: "👤", note: `${occRate}% occupancy rate` },
+        { label: "Available Beds", value: availableBeds, icon: "✨", note: "Ready for triage intake" },
+        { label: "Registered Patients", value: Object.keys(patientRecords || {}).length, icon: "📥", note: "Active patient profiles" },
         { label: "Active Appointments", value: stats.activeAppointments, icon: "📅", note: "Scheduled outpatient visits" },
         { label: "Emergency Admissions", value: stats.emergencyAdmissions, icon: "🚨", note: "Trauma & ICU admissions" }
       ];
@@ -1410,7 +1443,7 @@
                   Admin Controls Active
                 </span>
               )}
-              {(userRole === "Admin" || userRole === "Doctor") && (
+              {(userRole === "Admin" || userRole === "Doctor" || userRole === "Receptionist") && (
                 <button
                   onClick={onOpenAddPatient}
                   className="text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5 cursor-pointer"
@@ -1623,56 +1656,196 @@
     // ==========================================
     // 3D. ROOMS & BEDS TAB (Admins & Receptionists can Add Rooms & Beds)
     // ==========================================
-    function DashboardRoomsTab({ rooms, setRooms, userRole, onOpenAddRoom }) {
+    function DashboardRoomsTab({ rooms, setRooms, patientRecords = {}, user, userRole, onOpenAddRoom, logAccess, showToast }) {
       const canManageRooms = userRole === "Admin" || userRole === "Receptionist";
+      const [wardFilter, setWardFilter] = useState("ALL");
+      const [statusFilter, setStatusFilter] = useState("ALL");
+      const [assigningRoomIdx, setAssigningRoomIdx] = useState(null);
+      const [selectedPatientForBed, setSelectedPatientForBed] = useState("");
+      const [manualPatientForBed, setManualPatientForBed] = useState("");
+
+      const wards = ["ALL", ...Array.from(new Set(rooms.map(r => r.ward)))];
+      const totalCount = rooms.length;
+      const occupiedCount = rooms.filter(r => r.status === "Occupied").length;
+      const availableCount = rooms.filter(r => r.status === "Available").length;
+      const allPatients = Object.values(patientRecords || {});
+
+      const filteredRooms = rooms
+        .map((r, idx) => ({ ...r, originalIndex: idx }))
+        .filter(r => (wardFilter === "ALL" || r.ward === wardFilter))
+        .filter(r => (statusFilter === "ALL" || r.status === statusFilter));
+
+      const handleAssignBed = (origIdx) => {
+        const chosen = allPatients.find(p => p.id === selectedPatientForBed);
+        const patientName = chosen ? chosen.name : manualPatientForBed.trim();
+        const patientId = chosen ? chosen.id : "WALK-IN";
+        if (!patientName) return;
+
+        const target = rooms[origIdx];
+        setRooms(prev => prev.map((item, idx) =>
+          idx === origIdx ? { ...item, status: "Occupied", patient: patientName, id: patientId } : item
+        ));
+        if (logAccess) {
+          logAccess("BED_ASSIGNED", `${userRole} ${user?.name || "Staff"} assigned ${patientName} (${patientId}) to ${target.room} (${target.bed})`);
+        }
+        if (showToast) {
+          showToast(`Assigned ${patientName} to ${target.room} (${target.bed})`, "success");
+        }
+        setAssigningRoomIdx(null);
+        setSelectedPatientForBed("");
+        setManualPatientForBed("");
+      };
+
+      const handleDeassignBed = (origIdx) => {
+        const target = rooms[origIdx];
+        if (!target) return;
+        const prevPatient = target.patient;
+        setRooms(prev => prev.map((item, idx) =>
+          idx === origIdx ? { ...item, status: "Available", patient: "—", id: "—" } : item
+        ));
+        if (logAccess) {
+          logAccess("BED_DEASSIGNED", `${userRole} ${user?.name || "Staff"} de-assigned ${prevPatient} from ${target.room} (${target.bed}); bed is now Available.`);
+        }
+        if (showToast) {
+          showToast(`${target.room} (${target.bed}) vacated and marked Available`, "success");
+        }
+      };
 
       return (
         <div className="glass-card rounded-2xl p-6 border border-slate-200 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-bold text-slate-900">Rooms & Bed Allocation</h2>
-              <p className="text-xs text-slate-500">Live ward occupancy, bed identifiers, and patient room assignments</p>
+              <p className="text-xs text-slate-500">Live ward occupancy, bed identifiers, patient assignments & discharge vacate controls</p>
             </div>
             {canManageRooms && (
               <button 
                 onClick={onOpenAddRoom}
-                className="py-2 px-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm self-start sm:self-auto flex items-center gap-1.5"
+                className="py-2 px-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm self-start sm:self-auto flex items-center gap-1.5 cursor-pointer"
               >
                 <span>+ Add Room & Bed</span>
               </button>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {rooms.map((r, i) => (
-              <div key={i} className={`p-4 rounded-xl border transition-all ${
+          {/* Summary & Filters */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-bold text-slate-800">
+                Total: {totalCount}
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-emerald-100 border border-emerald-200 font-bold text-emerald-800">
+                Available: {availableCount}
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-amber-100 border border-amber-200 font-bold text-amber-800">
+                Occupied: {occupiedCount}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <select
+                value={wardFilter}
+                onChange={(e) => setWardFilter(e.target.value)}
+                className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-semibold text-slate-700"
+              >
+                {wards.map(w => (
+                  <option key={w} value={w}>{w === "ALL" ? "All Wards" : w}</option>
+                ))}
+              </select>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-semibold text-slate-700"
+              >
+                <option value="ALL">All Status</option>
+                <option value="Available">Available Only</option>
+                <option value="Occupied">Occupied Only</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            {filteredRooms.map((r) => (
+              <div key={`${r.room}-${r.bed}`} className={`p-4 rounded-xl border transition-all flex flex-col justify-between ${
                 r.status === 'Occupied' 
                   ? 'bg-slate-50 border-slate-200' 
                   : 'bg-emerald-50/50 border-emerald-200 shadow-2xs'
               }`}>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-bold text-xs text-slate-900">{r.room}</span>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                    r.status === 'Occupied' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
-                  }`}>
-                    {r.status}
-                  </span>
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-xs text-slate-900">{r.room}</span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                      r.status === 'Occupied' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
+                    }`}>
+                      {r.status}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500">{r.ward} &bull; <strong className="text-slate-700">{r.bed}</strong></p>
+                  <div className="mt-2.5 pt-2 border-t border-slate-200/60">
+                    <span className="text-[10px] text-slate-400 block">Assigned Patient:</span>
+                    <p className="text-xs font-semibold text-slate-800 truncate">{r.patient}</p>
+                    {r.id && r.id !== "—" && (
+                      <span className="text-[10px] font-mono text-blue-700">{r.id}</span>
+                    )}
+                  </div>
                 </div>
-                <p className="text-[11px] text-slate-500">{r.ward} &bull; <strong className="text-slate-700">{r.bed}</strong></p>
-                <div className="mt-3 pt-2 border-t border-slate-200/60">
-                  <span className="text-[10px] text-slate-400 block">Assigned Patient:</span>
-                  <p className="text-xs font-semibold text-slate-800 truncate">{r.patient}</p>
-                </div>
-                {userRole === "Receptionist" && r.status === "Available" && (
-                  <button 
-                    onClick={() => {
-                      const patientName = prompt(`Enter patient name to assign to ${r.room} (${r.bed}):`);
-                      if (patientName) {
-                        setRooms(prev => prev.map((item, idx) => idx === i ? { ...item, status: "Occupied", patient: patientName } : item));
-                      }
-                    }}
-                    className="mt-2.5 w-full py-1 text-[11px] bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg transition-colors">
-                    Assign Patient &rarr;
+
+                {canManageRooms && r.status === "Available" && (
+                  assigningRoomIdx === r.originalIndex ? (
+                    <div className="mt-2.5 space-y-1.5 pt-2 border-t border-emerald-200">
+                      <select
+                        value={selectedPatientForBed}
+                        onChange={(e) => setSelectedPatientForBed(e.target.value)}
+                        className="w-full px-2 py-1 text-[11px] rounded border border-slate-300 bg-white"
+                      >
+                        <option value="">-- Select Patient --</option>
+                        {allPatients.map(p => (
+                          <option key={p.id} value={p.id}>{p.name} ({p.id})</option>
+                        ))}
+                      </select>
+                      {!selectedPatientForBed && (
+                        <input
+                          type="text"
+                          value={manualPatientForBed}
+                          onChange={(e) => setManualPatientForBed(e.target.value)}
+                          placeholder="Or enter patient name"
+                          className="w-full px-2 py-1 text-[11px] rounded border border-slate-300 bg-white"
+                        />
+                      )}
+                      <div className="flex gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleAssignBed(r.originalIndex)}
+                          className="flex-1 py-1 text-[11px] bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg cursor-pointer"
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setAssigningRoomIdx(null); setSelectedPatientForBed(""); setManualPatientForBed(""); }}
+                          className="px-2 py-1 text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-lg cursor-pointer"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button 
+                      type="button"
+                      onClick={() => { setAssigningRoomIdx(r.originalIndex); setSelectedPatientForBed(""); setManualPatientForBed(""); }}
+                      className="mt-2.5 w-full py-1.5 text-[11px] bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg transition-colors cursor-pointer">
+                      Assign Patient &rarr;
+                    </button>
+                  )
+                )}
+
+                {canManageRooms && r.status === "Occupied" && (
+                  <button
+                    type="button"
+                    onClick={() => handleDeassignBed(r.originalIndex)}
+                    className="mt-2.5 w-full py-1.5 text-[11px] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold rounded-lg transition-colors cursor-pointer"
+                  >
+                    🔓 De-assign / Vacate Bed
                   </button>
                 )}
               </div>
@@ -5150,6 +5323,19 @@
       });
       const [formError, setFormError] = useState("");
 
+      const calculateAgeFromDob = (dobStr) => {
+        if (!dobStr) return null;
+        const birth = new Date(dobStr);
+        if (isNaN(birth.getTime())) return null;
+        const today = new Date();
+        let years = today.getFullYear() - birth.getFullYear();
+        const mDiff = today.getMonth() - birth.getMonth();
+        if (mDiff < 0 || (mDiff === 0 && today.getDate() < birth.getDate())) {
+          years--;
+        }
+        return years;
+      };
+
       const handleSubmit = (e) => {
         e.preventDefault();
         const cleanId = form.id.trim().toUpperCase();
@@ -5166,6 +5352,25 @@
           return;
         }
 
+        // Age vs Date of Birth conflict check
+        const enteredAge = parseInt(String(form.age).replace(/[^\d]/g, ""), 10);
+        if (isNaN(enteredAge) || enteredAge < 0 || enteredAge > 130) {
+          setFormError("Please enter a valid numeric Age in years (0 - 130).");
+          return;
+        }
+        if (form.dob) {
+          const birthDate = new Date(form.dob);
+          if (isNaN(birthDate.getTime()) || birthDate > new Date()) {
+            setFormError("Date of Birth cannot be in the future. Please correct DOB.");
+            return;
+          }
+          const expectedAge = calculateAgeFromDob(form.dob);
+          if (expectedAge !== null && enteredAge !== expectedAge) {
+            setFormError(`Age & DOB Conflict: Entered age is ${enteredAge} years, but Date of Birth (${form.dob}) corresponds to ${expectedAge} years. Please correct Age or DOB before adding the patient.`);
+            return;
+          }
+        }
+
         const chosenDoc = doctorsList.find(
           d => String(d.username || "").toLowerCase() === String(form.assignedDoctorUsername || "").toLowerCase()
         );
@@ -5173,7 +5378,7 @@
         const newPatient = {
           id: cleanId,
           name: form.name.trim(),
-          age: form.age.trim() || "Unknown",
+          age: `${enteredAge} years`,
           sex: form.sex,
           dob: form.dob.trim() || "Not Recorded",
           bloodGroup: form.bloodGroup,
@@ -5214,6 +5419,8 @@
                     ? `Patient will be strictly assigned to ${user?.name}`
                     : userRole === "EMT"
                     ? "Permitted for active emergency cases only"
+                    : userRole === "Receptionist"
+                    ? "Receptionist Intake — Add patient & assign doctor"
                     : "Administrator Full Patient Intake & Assignment"}
                 </p>
               </div>
@@ -5253,13 +5460,15 @@
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Age</label>
+                  <label className="block font-semibold text-slate-700 mb-1">Age (Years)</label>
                   <input
-                    type="text"
+                    type="number"
+                    min="0"
+                    max="130"
                     required
                     value={form.age}
-                    onChange={(e) => setForm({ ...form, age: e.target.value })}
-                    placeholder="e.g. 34 years"
+                    onChange={(e) => { setFormError(""); setForm({ ...form, age: e.target.value }); }}
+                    placeholder="e.g. 34"
                     className="w-full px-3 py-2 border rounded-xl"
                   />
                 </div>
@@ -5298,10 +5507,10 @@
                 <div>
                   <label className="block font-semibold text-slate-700 mb-1">Date of Birth</label>
                   <input
-                    type="text"
+                    type="date"
+                    required
                     value={form.dob}
-                    onChange={(e) => setForm({ ...form, dob: e.target.value })}
-                    placeholder="e.g. 12 Aug 1992"
+                    onChange={(e) => { setFormError(""); setForm({ ...form, dob: e.target.value }); }}
                     className="w-full px-3 py-2 border rounded-xl"
                   />
                 </div>
