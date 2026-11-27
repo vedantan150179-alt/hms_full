@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "timestamp": "2026-11-24 14:10:02",
+    "user": "Dr. Alistair Smith",
+    "role": "Doctor",
+    "action": "STANDARD_LOGIN",
+    "details": "Authenticated with staff credentials"
+  },
+  {
+    "id": 2,
+    "timestamp": "2026-11-24 14:15:30",
+    "user": "Dr. Alistair Smith",
+    "role": "Doctor",
+    "action": "PATIENT_RECORD_VIEW",
+    "details": "Accessed complete EMR for PAT-2026-001 with PIN"
+  }
+]

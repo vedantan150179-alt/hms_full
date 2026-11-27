@@ -1,0 +1,2346 @@
+{
+  "PAT-2026-001": {
+    "id": "PAT-2026-001",
+    "name": "Manas Kumar Singh",
+    "age": "20 years",
+    "sex": "Male",
+    "dob": "31 March 2006",
+    "bloodGroup": "B Positive (B+)",
+    "location": "Ranchi, Jharkhand, India",
+    "contact": "9898989810",
+    "allergies": [
+      {
+        "name": "No Known Drug Allergies (NKDA)",
+        "severity": "None Reported",
+        "reaction": "Patient has no documented sensitivities to beta-lactams or NSAIDs."
+      }
+    ],
+    "currentConditions": [
+      "Post-operative Closed Right Femoral Shaft Fracture (Status Post CRIF Intramedullary Interlocking Nailing)",
+      "History of Paroxysmal Supraventricular Tachycardia (PSVT) - Under Medical Surveillance"
+    ],
+    "vitals": [
+      {
+        "name": "Blood Pressure",
+        "value": "128/78",
+        "unit": "mmHg",
+        "status": "Controlled",
+        "parameter": "Blood Pressure",
+        "referenceRange": "90-120 / 60-80"
+      },
+      {
+        "name": "Heart Rate",
+        "value": "76",
+        "unit": "BPM",
+        "status": "Normal Sinus",
+        "parameter": "Heart Rate",
+        "referenceRange": "60-100"
+      },
+      {
+        "name": "Oxygen Saturation",
+        "value": "99%",
+        "unit": "SpO2 on Room Air",
+        "status": "Optimal",
+        "parameter": "Oxygen Saturation",
+        "referenceRange": "95-100"
+      },
+      {
+        "name": "Body Temperature",
+        "value": "36.7 °C",
+        "unit": "(98.1 °F)",
+        "status": "Afebrile",
+        "parameter": "Body Temperature",
+        "referenceRange": "36.1-37.2"
+      },
+      {
+        "name": "Respiratory Rate",
+        "value": "16",
+        "unit": "breaths/min",
+        "status": "Eupneic",
+        "parameter": "Respiratory Rate",
+        "referenceRange": "12-20"
+      },
+      {
+        "name": "Pain Score",
+        "value": "2 / 10",
+        "unit": "Numeric Rating Scale",
+        "status": "Well Controlled",
+        "parameter": "Pain Score",
+        "referenceRange": "0-3"
+      }
+    ],
+    "preRecord": {
+      "documentId": "DOC-PRE-2026-001",
+      "title": "Routine Medical Checkup Report",
+      "subtitle": "Routine Outpatient Health Assessment & Cardiac Surveillance",
+      "encounterDate": "15 August 2026",
+      "facility": "Fictional Demonstration Hospital, Ranchi",
+      "department": "General Medicine / Cardiology",
+      "physician": "Dr. Aarav Mehta (Consulting Cardiologist / General Medicine)",
+      "electronicSignature": "DEMO-SIGNATURE-001",
+      "classification": "Historical outpatient medical record. Fictional dataset for testing.",
+      "generalHealth": {
+        "assessment": "The patient attended a routine medical consultation. General health was reported as good, with independent daily functioning and no acute complaints at the time of examination.",
+        "condition": "Good",
+        "consciousness": "Alert and oriented",
+        "mobility": "Independent",
+        "respiratory": "Normal"
+      },
+      "medicalHistory": {
+        "knownCondition": "Paroxysmal supraventricular tachycardia (PSVT). The patient has a history of intermittent episodes of rapid heartbeat and is under medical supervision. The condition was considered stable on the medication reported below.",
+        "cardiacEvaluation": "Yes, prior diagnostic workup confirmed intermittent PSVT.",
+        "hospitalization": "One evaluation for episodes of rapid heartbeat (in remission).",
+        "previousSurgeries": "None reported.",
+        "majorInjuries": "None documented.",
+        "transfusions": "None documented."
+      },
+      "currentMedications": [
+        {
+          "medication": "Metoprolol Succinate",
+          "dosage": "25 mg",
+          "frequency": "Once daily",
+          "purpose": "Heart-rate control / PSVT prophylaxis"
+        }
+      ],
+      "allergies": {
+        "drug": "None reported (NKDA)",
+        "food": "None reported",
+        "other": "None reported"
+      },
+      "baselineVitals": [
+        {
+          "parameter": "Blood Pressure",
+          "value": "122/78 mmHg",
+          "status": "Optimal"
+        },
+        {
+          "parameter": "Heart Rate",
+          "value": "76 BPM",
+          "status": "Normal Sinus"
+        },
+        {
+          "parameter": "SpO2",
+          "value": "99%",
+          "status": "Normal"
+        },
+        {
+          "parameter": "Temperature",
+          "value": "36.7 °C",
+          "status": "Normal"
+        },
+        {
+          "parameter": "Respiratory Rate",
+          "value": "16 /min",
+          "status": "Eupneic"
+        }
+      ],
+      "cardiacAssessment": {
+        "ecg": "Normal sinus rhythm at the time of examination.",
+        "echo": "Preserved left ventricular systolic function, estimated ejection fraction (EF) of 60%.",
+        "findings": "No acute cardiac abnormality was identified during this consultation.",
+        "ecgDetails": {
+          "rhythm": "Normal Sinus Rhythm",
+          "rate": "76 BPM",
+          "intervals": "PR 156 ms, QRS 86 ms, QTc 408 ms",
+          "axis": "Normal (+52 deg)",
+          "interpretation": "Normal baseline 12-lead ECG; no acute ischemic changes or active PSVT."
+        },
+        "echoDetails": {
+          "ejectionFraction": 60,
+          "chamberSizes": "Normal LV/LA/RV/RA dimensions",
+          "valveFindings": "No significant valvular regurgitation or stenosis",
+          "wallMotion": "Normal global and regional wall motion",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 0,
+          "events": []
+        }
+      },
+      "clinicalAssessment": "The patient was generally healthy and physically independent. Known PSVT was stable on prescribed Metoprolol Succinate therapy. No acute medical concerns were identified during this visit. Continued prescribed medication and routine cardiology follow-up were advised."
+    },
+    "postRecord": {
+      "documentId": "DOC-POST-2026-001",
+      "title": "Emergency Trauma & Hospitalization Report",
+      "subtitle": "Acute Trauma Resuscitation, Surgical Stabilization & Inpatient Management",
+      "encounterDates": "20–24 November 2026",
+      "facility": "Fictional Demonstration Hospital, Ranchi",
+      "departments": "Emergency Medicine, Orthopedics & Cardiology",
+      "attendingSurgeon": "Dr. Rohan Verma (Attending Orthopedic Surgeon)",
+      "consultingCardiologist": "Dr. Aarav Mehta (Consulting Cardiologist)",
+      "electronicSignature": "DEMO-SIGNATURE-002",
+      "relatedHistoricalRecord": "DOC-PRE-2026-001 (15 August 2026)",
+      "accident": {
+        "incident": "Motorcycle collision with road divider",
+        "date": "20 November 2026",
+        "time": "Approx. 09:15 AM",
+        "location": "Ranchi, Jharkhand, India",
+        "description": "The patient reportedly fell from a motorcycle following a collision and sustained direct blunt trauma to the right thigh. He experienced immediate excruciating pain and inability to bear weight on the right lower limb. He was transported to the emergency department via trauma ambulance."
+      },
+      "edAssessment": {
+        "arrival": "10:05 AM, 20 November 2026",
+        "chiefComplaints": "Severe right thigh pain, swelling, and inability to stand or walk. Pain aggravated by any limb movement.",
+        "consciousness": "Alert and oriented; GCS 15/15",
+        "airway": "Patent; breathing spontaneous and adequate",
+        "circulation": "Hemodynamically stable on initial triage assessment",
+        "externalBleeding": "No significant active external bleeding reported",
+        "headInjury": "No loss of consciousness reported; no obvious external head injury"
+      },
+      "initialVitals": [
+        {
+          "parameter": "Blood Pressure",
+          "value": "128/78 mmHg",
+          "status": "Normal"
+        },
+        {
+          "parameter": "Heart Rate",
+          "value": "108 BPM",
+          "status": "Sinus Tachycardia (Pain/Stress)"
+        },
+        {
+          "parameter": "SpO2",
+          "value": "98%",
+          "status": "Normal on Room Air"
+        },
+        {
+          "parameter": "Temperature",
+          "value": "36.8 °C",
+          "status": "Afebrile"
+        },
+        {
+          "parameter": "Respiratory Rate",
+          "value": "20 /min",
+          "status": "Mild Tachypnea"
+        },
+        {
+          "parameter": "Pain Score",
+          "value": "9 / 10",
+          "status": "Severe Acute Pain"
+        },
+        {
+          "parameter": "Glasgow Coma Scale",
+          "value": "15 / 15",
+          "status": "Fully Conscious"
+        }
+      ],
+      "physicalExam": {
+        "rightLimb": "Visible right thigh swelling, mid-thigh tenderness, gross deformity consistent with fracture and restricted movement due to severe pain. Closed injury: no open communicating wound or bone extrusion identified.",
+        "neurovascular": "Distal pedal pulses (Dorsalis Pedis & Posterior Tibial) palpable; foot sensation and distal toe motor function fully preserved.",
+        "systemic": "Chest examination clear; abdomen soft and non-tender; no focal neurological deficit identified."
+      },
+      "radiology": {
+        "investigation": "Digital X-Ray Right Femur (AP and Lateral views)",
+        "date": "20 November 2026",
+        "findings": "Displaced transverse fracture involving the midshaft of the right femur, with cortical disruption and displacement of fracture fragments. No additional fracture identified in visualized femur portions.",
+        "impression": "Closed displaced transverse fracture of the midshaft of the right femur (AO/OTA 32-A3).",
+        "studyName": "Digital X-Ray Right Femur (AP & Lateral Views)",
+        "radiologist": "Dr. Kavita Iyer, MD (Radiology)",
+        "priorComparison": "No prior right femur radiograph on file; post-op CRIF nail alignment verified on 21 Nov 2026.",
+        "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3ERight%20Femur%20AP%2FLat%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E20%20Nov%202026%20%7C%20Midshaft%20Transverse%20Fracture%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EFINDING%3A%20AO%2FOTA%2032-A3%20Displaced%20Midshaft%20Fracture%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
+      },
+      "laboratory": {
+        "cbc": [
+          {
+            "parameter": "Hemoglobin",
+            "value": "13.4",
+            "unit": "g/dL",
+            "referenceRange": "13.0-17.0",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "40.2",
+            "unit": "%",
+            "referenceRange": "38.0-50.0",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RBC",
+            "value": "4.75",
+            "unit": "million/uL",
+            "referenceRange": "4.5-5.9",
+            "status": "Normal"
+          },
+          {
+            "parameter": "WBC",
+            "value": "11800",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "High"
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "74",
+            "unit": "%",
+            "referenceRange": "40-70",
+            "status": "High"
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "19",
+            "unit": "%",
+            "referenceRange": "20-40",
+            "status": "Low"
+          },
+          {
+            "parameter": "Monocytes",
+            "value": "5",
+            "unit": "%",
+            "referenceRange": "2-8",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Eosinophils",
+            "value": "2",
+            "unit": "%",
+            "referenceRange": "1-4",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "268000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCV",
+            "value": "84.6",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCH",
+            "value": "28.2",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "33.3",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "13.1",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
+            "status": "Normal"
+          }
+        ],
+        "electrolytes": [
+          {
+            "parameter": "Creatinine",
+            "value": "0.9 mg/dL",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Blood Urea",
+            "value": "24 mg/dL",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "139 mmol/L",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.2 mmol/L",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Blood Glucose",
+            "value": "102 mg/dL",
+            "status": "Normal"
+          },
+          {
+            "parameter": "PT / INR",
+            "value": "1.0",
+            "status": "Normal Coagulation"
+          }
+        ],
+        "dateTime": "2026-11-20 10:30",
+        "coagulation": [
+          {
+            "parameter": "PT",
+            "value": "12.4",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.0",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "29.5",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "chemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "102",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "139",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.2",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Chloride",
+            "value": "101",
+            "unit": "mmol/L",
+            "referenceRange": "98-107",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Blood Urea (BUN)",
+            "value": "24",
+            "unit": "mg/dL",
+            "referenceRange": "15-40",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "0.9",
+            "unit": "mg/dL",
+            "referenceRange": "0.7-1.3",
+            "status": "Normal"
+          },
+          {
+            "parameter": "ALT (SGPT)",
+            "value": "28",
+            "unit": "U/L",
+            "referenceRange": "7-56",
+            "status": "Normal"
+          },
+          {
+            "parameter": "AST (SGOT)",
+            "value": "31",
+            "unit": "U/L",
+            "referenceRange": "10-40",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Total Bilirubin",
+            "value": "0.7",
+            "unit": "mg/dL",
+            "referenceRange": "0.2-1.2",
+            "status": "Normal"
+          }
+        ]
+      },
+      "cardiacAssessment": {
+        "ecgDate": "20 November 2026",
+        "ecgFindings": "Sinus tachycardia, approximately 108 BPM. No acute ischemic ST-T changes identified. No sustained PSVT episode captured on the recorded ECG.",
+        "monitoring": "Continuous telemetry initiated due to known PSVT history. Cardiology review and anesthetic assessment cleared patient for operative fixation.",
+        "ecgDetails": {
+          "rhythm": "Sinus Tachycardia",
+          "rate": "108 BPM",
+          "intervals": "PR 144 ms, QRS 88 ms, QTc 418 ms",
+          "axis": "Normal (+54 deg)",
+          "interpretation": "Reactive sinus tachycardia secondary to acute trauma pain; no ST-T ischemic changes."
+        },
+        "echoDetails": {
+          "ejectionFraction": 58,
+          "chamberSizes": "Normal cardiac chambers",
+          "valveFindings": "Trace physiological TR, structurally normal valves",
+          "wallMotion": "No regional wall motion abnormality",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 48,
+          "events": [
+            "Brief self-limiting sinus tachycardia (112 BPM) during immediate post-op recovery; no sustained PSVT"
+          ]
+        }
+      },
+      "diagnosis": {
+        "primary": "Closed displaced transverse fracture of the midshaft right femur",
+        "secondary": "Pre-existing paroxysmal supraventricular tachycardia (PSVT), stable during hospitalization",
+        "additional": "Acute traumatic pain, localized soft-tissue swelling, and reactive sinus tachycardia"
+      },
+      "treatment": {
+        "admissionDate": "20 November 2026",
+        "procedureDate": "21 November 2026",
+        "procedure": "Closed reduction and internal fixation (CRIF) using an intramedullary interlocking nail",
+        "details": "Operative stabilization under fluoroscopic guidance. Closed reduction achieved, insertion of right antegrade intramedullary nail with proximal and distal interlocking screws.",
+        "postopFindings": "Acceptable anatomical alignment and satisfactory implant fixation. No immediate surgical complications. Distal neurovascular status preserved.",
+        "postopCBC": [
+          {
+            "parameter": "Hemoglobin",
+            "value": "11.8",
+            "unit": "g/dL",
+            "referenceRange": "13.0-17.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "35.4",
+            "unit": "%",
+            "referenceRange": "38.0-50.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "RBC",
+            "value": "4.18",
+            "unit": "million/uL",
+            "referenceRange": "4.5-5.9",
+            "status": "Low"
+          },
+          {
+            "parameter": "WBC",
+            "value": "10600",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "68",
+            "unit": "%",
+            "referenceRange": "40-70",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "24",
+            "unit": "%",
+            "referenceRange": "20-40",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Monocytes",
+            "value": "6",
+            "unit": "%",
+            "referenceRange": "2-8",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Eosinophils",
+            "value": "2",
+            "unit": "%",
+            "referenceRange": "1-4",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "244000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCV",
+            "value": "84.7",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCH",
+            "value": "28.2",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "33.3",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "13.4",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
+            "status": "Normal"
+          }
+        ],
+        "postopDateTime": "2026-11-22 08:15",
+        "postopCoagulation": [
+          {
+            "parameter": "PT",
+            "value": "13.1",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.1",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "32.0",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "postopChemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "114",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "138",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.1",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "0.9",
+            "unit": "mg/dL",
+            "referenceRange": "0.7-1.3",
+            "status": "Normal"
+          },
+          {
+            "parameter": "ALT (SGPT)",
+            "value": "34",
+            "unit": "U/L",
+            "referenceRange": "7-56",
+            "status": "Normal"
+          }
+        ]
+      },
+      "dischargeMeds": [
+        {
+          "medication": "Metoprolol Succinate",
+          "dose": "25 mg once daily",
+          "purpose": "Pre-existing cardiac rate control"
+        },
+        {
+          "medication": "Paracetamol",
+          "dose": "650 mg as prescribed PRN",
+          "purpose": "Post-operative analgesia"
+        },
+        {
+          "medication": "Enoxaparin",
+          "dose": "40 mg once daily (14-day course)",
+          "purpose": "Postoperative deep vein thrombosis prophylaxis"
+        },
+        {
+          "medication": "Pantoprazole",
+          "dose": "40 mg once daily before meals",
+          "purpose": "Gastroprotection during medication course"
+        }
+      ],
+      "dischargeCondition": {
+        "summary": "Conscious and oriented; hemodynamically stable. No sustained cardiac arrhythmias during hospital stay. Surgical wound clean and dry; pain adequately controlled. Distal circulation and sensation intact.",
+        "mobility": "Mobilization initiated with walker under physiotherapy supervision. Non-weight bearing on right lower limb.",
+        "date": "24 November 2026"
+      },
+      "followUp": [
+        "Orthopedic review within 10–14 days for stitch removal and clinical assessment",
+        "Repeat right femur digital X-ray as advised",
+        "Wound inspection and dry dressing maintenance",
+        "Continue prescribed cardiac medication (Metoprolol 25mg QD) without interruption",
+        "Cardiology outpatient follow-up for PSVT monitoring",
+        "Follow prescribed 14-day subcutaneous thromboprophylaxis plan",
+        "Seek emergency medical evaluation if experiencing chest pain, shortness of breath, palpitations, or worsening leg pain"
+      ]
+    },
+    "uploadedDocuments": [
+      {
+        "documentId": "UPL-001-XRAY",
+        "title": "Right Femur AP & Lateral X-Ray Scan",
+        "fileName": "PAT-2026-001_Right_Femur_XRay.svg",
+        "uploadedBy": "Dr. Rohan Verma (Orthopedics)",
+        "uploadedAt": "20 Nov 2026, 10:42 AM",
+        "fileType": "image/svg+xml",
+        "fileSize": "4.2 KB",
+        "category": "xray",
+        "linkedReportId": "DOC-POST-2026-001",
+        "parseStatus": "parsed",
+        "notes": "Digital PACS export of pre-op femur fracture.",
+        "dataUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3ERight%20Femur%20AP%2FLat%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E20%20Nov%202026%20%7C%20PACS%20Export%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EAO%2FOTA%2032-A3%20Midshaft%20Fracture%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
+      },
+      {
+        "documentId": "UPL-001-LAB",
+        "title": "Post-Op Day 2 Hematology & Coagulation Sheet",
+        "fileName": "PAT-2026-001_PostOp_CBC.pdf",
+        "uploadedBy": "Central Pathology Lab",
+        "uploadedAt": "22 Nov 2026, 08:30 AM",
+        "fileType": "application/pdf",
+        "fileSize": "128 KB",
+        "category": "blood",
+        "linkedReportId": "DOC-POST-2026-001",
+        "parseStatus": "parsed",
+        "notes": "Verified post-operative CBC & coagulation panel.",
+        "dataUrl": "/data/reports/PAT-2026-001_Post-Accident_Hospital_Report.pdf"
+      },
+      {
+        "documentId": "UPL-001-PEND",
+        "title": "Physiotherapy Gait Assessment Notes",
+        "fileName": "PAT-2026-001_Physio_Notes.pdf",
+        "uploadedBy": "Physio Dept",
+        "uploadedAt": "24 Nov 2026, 02:15 PM",
+        "fileType": "application/pdf",
+        "fileSize": "94 KB",
+        "category": "other",
+        "parseStatus": "pending",
+        "notes": "Awaiting automated EMR parsing.",
+        "dataUrl": "/data/reports/PAT-2026-001_Pre-Accident_Medical_Record.pdf"
+      }
+    ]
+  },
+  "PAT-2026-002": {
+    "id": "PAT-2026-002",
+    "name": "Priya Sharma",
+    "age": "28 years",
+    "sex": "Female",
+    "dob": "12 July 1998",
+    "bloodGroup": "O Positive (O+)",
+    "location": "Jaipur, Rajasthan, India",
+    "contact": "9829012345",
+    "allergies": [
+      {
+        "name": "Sulfa Antibiotics",
+        "severity": "Moderate",
+        "reaction": "Erythematous rash & urticaria"
+      }
+    ],
+    "currentConditions": [
+      "Post-reduction Closed Displaced Distal Radius Fracture (Right Colles Fracture in Below-Elbow Cast)",
+      "Primary Hypothyroidism - Euthyroid on Levothyroxine"
+    ],
+    "vitals": [
+      {
+        "name": "Blood Pressure",
+        "value": "118/74",
+        "unit": "mmHg",
+        "status": "Normal",
+        "parameter": "Blood Pressure",
+        "referenceRange": "90-120 / 60-80"
+      },
+      {
+        "name": "Heart Rate",
+        "value": "72",
+        "unit": "BPM",
+        "status": "Normal Sinus",
+        "parameter": "Heart Rate",
+        "referenceRange": "60-100"
+      },
+      {
+        "name": "Oxygen Saturation",
+        "value": "99%",
+        "unit": "SpO2 on Room Air",
+        "status": "Optimal",
+        "parameter": "Oxygen Saturation",
+        "referenceRange": "95-100"
+      },
+      {
+        "name": "Body Temperature",
+        "value": "36.6 °C",
+        "unit": "(97.9 °F)",
+        "status": "Afebrile",
+        "parameter": "Body Temperature",
+        "referenceRange": "36.1-37.2"
+      },
+      {
+        "name": "Respiratory Rate",
+        "value": "15",
+        "unit": "breaths/min",
+        "status": "Eupneic",
+        "parameter": "Respiratory Rate",
+        "referenceRange": "12-20"
+      },
+      {
+        "name": "Pain Score",
+        "value": "1 / 10",
+        "unit": "Numeric Rating Scale",
+        "status": "Minimal / Controlled",
+        "parameter": "Pain Score",
+        "referenceRange": "0-3"
+      }
+    ],
+    "preRecord": {
+      "documentId": "DOC-PRE-2026-002",
+      "title": "Routine Medical Checkup Report",
+      "subtitle": "Annual Endocrine & General Health Review",
+      "encounterDate": "10 June 2026",
+      "facility": "Demonstration Hospital, Jaipur Medical Center",
+      "department": "Endocrinology & General Medicine",
+      "physician": "Dr. Ananya Mathur, MD",
+      "electronicSignature": "DEMO-SIGNATURE-003",
+      "classification": "Historical outpatient medical record. Fictional dataset for testing.",
+      "generalHealth": {
+        "assessment": "Patient presented for annual thyroid evaluation and wellness checkup. Reports feeling energetic, maintaining active lifestyle as a high school mathematics teacher.",
+        "condition": "Excellent",
+        "consciousness": "Alert and oriented",
+        "mobility": "Independent",
+        "respiratory": "Normal"
+      },
+      "medicalHistory": {
+        "knownCondition": "Primary Hypothyroidism diagnosed in 2022. Well-stabilized on daily hormone replacement therapy.",
+        "cardiacEvaluation": "Normal baseline ECG; no cardiac symptoms.",
+        "hospitalization": "None.",
+        "previousSurgeries": "Elective laparoscopic appendectomy in 2020 without complications.",
+        "majorInjuries": "None documented.",
+        "transfusions": "None documented."
+      },
+      "currentMedications": [
+        {
+          "medication": "Levothyroxine Sodium",
+          "dosage": "50 mcg",
+          "frequency": "Once daily on empty stomach",
+          "purpose": "Thyroid hormone replacement"
+        },
+        {
+          "medication": "Vitamin D3 (Cholecalciferol)",
+          "dosage": "60,000 IU",
+          "frequency": "Once monthly",
+          "purpose": "Bone density maintenance"
+        }
+      ],
+      "allergies": {
+        "drug": "Sulfa Antibiotics (Sulfamethoxazole-Trimethoprim) - Rash",
+        "food": "None reported",
+        "other": "None reported"
+      },
+      "baselineVitals": [
+        {
+          "parameter": "Blood Pressure",
+          "value": "116/72 mmHg",
+          "status": "Optimal"
+        },
+        {
+          "parameter": "Heart Rate",
+          "value": "70 BPM",
+          "status": "Normal Sinus"
+        },
+        {
+          "parameter": "SpO2",
+          "value": "99%",
+          "status": "Optimal"
+        },
+        {
+          "parameter": "Temperature",
+          "value": "36.6 °C",
+          "status": "Afebrile"
+        },
+        {
+          "parameter": "Respiratory Rate",
+          "value": "14 /min",
+          "status": "Normal"
+        }
+      ],
+      "cardiacAssessment": {
+        "ecg": "Normal sinus rhythm, 70 BPM. No conduction abnormalities.",
+        "echo": "Not clinically indicated.",
+        "findings": "Heart sounds S1 S2 normal; no murmurs.",
+        "ecgDetails": {
+          "rhythm": "Normal Sinus Rhythm",
+          "rate": "72 BPM",
+          "intervals": "PR 150 ms, QRS 82 ms, QTc 410 ms",
+          "axis": "Normal",
+          "interpretation": "Normal baseline ECG."
+        },
+        "echoDetails": {
+          "ejectionFraction": 62,
+          "chamberSizes": "Normal",
+          "valveFindings": "Normal",
+          "wallMotion": "Normal",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 0,
+          "events": []
+        }
+      },
+      "clinicalAssessment": "Patient is euthyroid and in robust general health. TSH level at 2.1 mIU/L (normal range 0.4-4.0). Continue current dose of Levothyroxine 50 mcg QD. Routine follow-up in 12 months."
+    },
+    "postRecord": {
+      "documentId": "DOC-POST-2026-002",
+      "title": "Emergency Trauma & Hospitalization Report",
+      "subtitle": "Acute Fall from Two-Wheeler Scooter & Upper Limb Trauma Stabilization",
+      "encounterDates": "18–20 November 2026",
+      "facility": "Demonstration Hospital, Jaipur Medical Center",
+      "departments": "Emergency Medicine & Orthopedics",
+      "attendingSurgeon": "Dr. Vikramaditya Rathore, MS (Ortho)",
+      "consultingCardiologist": "Dr. Ananya Mathur, MD",
+      "electronicSignature": "DEMO-SIGNATURE-004",
+      "relatedHistoricalRecord": "DOC-PRE-2026-002 (10 June 2026)",
+      "accident": {
+        "incident": "Two-wheeler scooty skid on gravel road",
+        "date": "18 November 2026",
+        "time": "Approx. 08:30 AM",
+        "location": "Vaishali Nagar, Jaipur, Rajasthan",
+        "description": "Patient slipped while braking on a wet gravel patch. Sustained fall onto outstretched right hand (FOOSH injury). Instant severe pain and dinner-fork deformity at right wrist."
+      },
+      "edAssessment": {
+        "arrival": "09:15 AM, 18 November 2026",
+        "chiefComplaints": "Severe pain, swelling, and deformity of the right wrist with inability to move fingers comfortably.",
+        "consciousness": "Alert and oriented; GCS 15/15",
+        "airway": "Patent and spontaneous",
+        "circulation": "Stable, radial pulse palpable",
+        "externalBleeding": "No open wounds or skin breaks",
+        "headInjury": "Wore safety helmet; no head impact, loss of consciousness, or dizziness"
+      },
+      "initialVitals": [
+        {
+          "parameter": "Blood Pressure",
+          "value": "124/80 mmHg",
+          "status": "Normal"
+        },
+        {
+          "parameter": "Heart Rate",
+          "value": "94 BPM",
+          "status": "Sinus Tachycardia (Acute Pain)"
+        },
+        {
+          "parameter": "SpO2",
+          "value": "99%",
+          "status": "Optimal"
+        },
+        {
+          "parameter": "Temperature",
+          "value": "36.7 °C",
+          "status": "Afebrile"
+        },
+        {
+          "parameter": "Respiratory Rate",
+          "value": "18 /min",
+          "status": "Normal"
+        },
+        {
+          "parameter": "Pain Score",
+          "value": "8 / 10",
+          "status": "Severe Wrist Pain"
+        },
+        {
+          "parameter": "Glasgow Coma Scale",
+          "value": "15 / 15",
+          "status": "Alert"
+        }
+      ],
+      "physicalExam": {
+        "rightLimb": "Classic dinner-fork dorsal displacement of right distal radius. Tenderness over wrist joint. Capillary refill < 2 seconds in all 5 fingers. Median nerve sensation over thumb and index finger intact.",
+        "neurovascular": "Radial pulse 2+ and regular. Active finger flexion and extension preserved.",
+        "systemic": "No other musculoskeletal or abdominal tenderness."
+      },
+      "radiology": {
+        "investigation": "Digital X-Ray Right Wrist (PA and Lateral)",
+        "date": "18 November 2026",
+        "findings": "Closed extra-articular transverse fracture of the distal radius with dorsal displacement and tilt. Ulnar styloid intact. Joint congruent.",
+        "impression": "Closed displaced right distal radius Colles fracture (AO 23-A2).",
+        "studyName": "Digital X-Ray Right Wrist (PA & Lateral)",
+        "radiologist": "Dr. Arvind Kulkarni, MD (Radiology)",
+        "priorComparison": "Check radiograph post-cast shows satisfactory volar tilt restoration.",
+        "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3ERight%20Wrist%20PA%2FLat%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E21%20Nov%202026%20%7C%20Distal%20Radius%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EFINDING%3A%20Colles%20Fracture%20-%20Post-Reduction%20Casted%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
+      },
+      "laboratory": {
+        "cbc": [
+          {
+            "parameter": "Hemoglobin",
+            "value": "12.2",
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "37.1",
+            "unit": "%",
+            "referenceRange": "36.0-46.0",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RBC",
+            "value": "4.35",
+            "unit": "million/uL",
+            "referenceRange": "4.0-5.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "WBC",
+            "value": "9400",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "64",
+            "unit": "%",
+            "referenceRange": "40-70",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "28",
+            "unit": "%",
+            "referenceRange": "20-40",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "245000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCV",
+            "value": "85.2",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCH",
+            "value": "28.0",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "32.9",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "13.0",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
+            "status": "Normal"
+          }
+        ],
+        "electrolytes": [
+          {
+            "parameter": "Creatinine",
+            "value": "0.75 mg/dL",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Blood Urea",
+            "value": "18 mg/dL",
+            "status": "Normal"
+          },
+          {
+            "parameter": "TSH (Free)",
+            "value": "2.3 mIU/L",
+            "status": "Euthyroid"
+          },
+          {
+            "parameter": "Blood Glucose",
+            "value": "92 mg/dL",
+            "status": "Normal"
+          },
+          {
+            "parameter": "PT / INR",
+            "value": "1.0",
+            "status": "Normal"
+          }
+        ],
+        "dateTime": "2026-11-21 11:15",
+        "coagulation": [
+          {
+            "parameter": "PT",
+            "value": "12.0",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.0",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "28.0",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "chemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "96",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "140",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.0",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "0.75",
+            "unit": "mg/dL",
+            "referenceRange": "0.6-1.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "TSH",
+            "value": "2.4",
+            "unit": "mIU/L",
+            "referenceRange": "0.4-4.5",
+            "status": "Normal"
+          }
+        ]
+      },
+      "cardiacAssessment": {
+        "ecgDate": "18 November 2026",
+        "ecgFindings": "Normal sinus rhythm, 92 BPM. No arrhythmia or ST changes.",
+        "monitoring": "Monitored during procedural hematoma block and reduction.",
+        "ecgDetails": {
+          "rhythm": "Normal Sinus Rhythm",
+          "rate": "78 BPM",
+          "intervals": "PR 148 ms, QRS 82 ms, QTc 412 ms",
+          "axis": "Normal",
+          "interpretation": "Stable sinus rhythm."
+        },
+        "echoDetails": {
+          "ejectionFraction": 62,
+          "chamberSizes": "Normal",
+          "valveFindings": "Normal",
+          "wallMotion": "Normal",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 12,
+          "events": []
+        }
+      },
+      "diagnosis": {
+        "primary": "Closed displaced right distal radius Colles fracture",
+        "secondary": "Primary Hypothyroidism on replacement therapy",
+        "additional": "Localized wrist soft tissue edema"
+      },
+      "treatment": {
+        "admissionDate": "18 November 2026",
+        "procedureDate": "18 November 2026",
+        "procedure": "Closed reduction under local hematoma block and immobilization in below-elbow plaster cast",
+        "details": "Anatomical reduction confirmed via C-arm fluoroscopy. Radial inclination and volar tilt restored. Applied well-padded below-elbow fiberglass cast.",
+        "postopFindings": "Check X-ray confirms anatomical reduction. Distal circulation and sensation unimpaired.",
+        "postopCBC": [
+          {
+            "parameter": "Hemoglobin",
+            "value": "12.0",
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "36.5",
+            "unit": "%",
+            "referenceRange": "36.0-46.0",
+            "status": "Normal"
+          },
+          {
+            "parameter": "WBC",
+            "value": "8100",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "240000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          }
+        ],
+        "postopDateTime": "2026-11-22 09:00",
+        "postopCoagulation": [],
+        "postopChemistry": []
+      },
+      "dischargeMeds": [
+        {
+          "medication": "Levothyroxine Sodium",
+          "dose": "50 mcg once daily early morning",
+          "purpose": "Continue baseline thyroid therapy"
+        },
+        {
+          "medication": "Paracetamol",
+          "dose": "650 mg PO Q8H PRN",
+          "purpose": "Pain relief"
+        },
+        {
+          "medication": "Ibuprofen",
+          "dose": "400 mg PO BD with food (3 days)",
+          "purpose": "Anti-inflammatory swelling reduction"
+        },
+        {
+          "medication": "Calcium Carbonate + Vit D3",
+          "dose": "500 mg / 400 IU once daily",
+          "purpose": "Support bone healing"
+        }
+      ],
+      "dischargeCondition": {
+        "summary": "Hemodynamically stable; cast snug and intact; fingers pink, warm, and freely movable. Discharged on 20 November 2026.",
+        "mobility": "Ambulatory with right arm supported in an arm sling.",
+        "date": "20 November 2026"
+      },
+      "followUp": [
+        "Orthopedic clinic review in 7 days with repeat check X-ray",
+        "Keep plaster cast dry and elevated in sling",
+        "Active finger movements 10 times every hour",
+        "Cast removal planned at 6 weeks followed by wrist physiotherapy",
+        "Urgent consult if fingers become blue, pale, swollen, or numb"
+      ]
+    },
+    "uploadedDocuments": [
+      {
+        "documentId": "UPL-002-XRAY",
+        "title": "Right Wrist Post-Reduction X-Ray",
+        "fileName": "PAT-2026-002_Wrist_XRay.svg",
+        "uploadedBy": "Dr. Sneha Joshi",
+        "uploadedAt": "21 Nov 2026, 01:10 PM",
+        "fileType": "image/svg+xml",
+        "fileSize": "4.1 KB",
+        "category": "xray",
+        "linkedReportId": "DOC-POST-2026-002",
+        "parseStatus": "parsed",
+        "notes": "Post-cast alignment check.",
+        "dataUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3ERight%20Wrist%20PA%2FLat%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E21%20Nov%202026%20%7C%20Post-Reduction%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EColles%20Fracture%20Reduced%20%26%20Casted%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
+      }
+    ]
+  },
+  "PAT-2026-003": {
+    "id": "PAT-2026-003",
+    "name": "Rajesh V. Patel",
+    "age": "52 years",
+    "sex": "Male",
+    "dob": "04 May 1974",
+    "bloodGroup": "A Positive (A+)",
+    "location": "Ahmedabad, Gujarat, India",
+    "contact": "9825098765",
+    "allergies": [
+      {
+        "name": "No Known Drug Allergies (NKDA)",
+        "severity": "None Reported",
+        "reaction": "No sensitivities documented."
+      }
+    ],
+    "currentConditions": [
+      "Post-traumatic Blunt Chest Injury with Right 4th and 5th Rib Fractures (Conservative Management)",
+      "Essential Hypertension - Controlled on ARB Monotherapy"
+    ],
+    "vitals": [
+      {
+        "name": "Blood Pressure",
+        "value": "126/80",
+        "unit": "mmHg",
+        "status": "Optimal",
+        "parameter": "Blood Pressure",
+        "referenceRange": "90-120 / 60-80"
+      },
+      {
+        "name": "Heart Rate",
+        "value": "74",
+        "unit": "BPM",
+        "status": "Normal Sinus",
+        "parameter": "Heart Rate",
+        "referenceRange": "60-100"
+      },
+      {
+        "name": "Oxygen Saturation",
+        "value": "98%",
+        "unit": "SpO2 on Room Air",
+        "status": "Normal",
+        "parameter": "Oxygen Saturation",
+        "referenceRange": "95-100"
+      },
+      {
+        "name": "Body Temperature",
+        "value": "36.8 °C",
+        "unit": "(98.2 °F)",
+        "status": "Afebrile",
+        "parameter": "Body Temperature",
+        "referenceRange": "36.1-37.2"
+      },
+      {
+        "name": "Respiratory Rate",
+        "value": "16",
+        "unit": "breaths/min",
+        "status": "Eupneic",
+        "parameter": "Respiratory Rate",
+        "referenceRange": "12-20"
+      },
+      {
+        "name": "Pain Score",
+        "value": "2 / 10",
+        "unit": "Numeric Rating Scale",
+        "status": "Comfortable",
+        "parameter": "Pain Score",
+        "referenceRange": "0-3"
+      }
+    ],
+    "preRecord": {
+      "documentId": "DOC-PRE-2026-003",
+      "title": "Routine Medical Checkup Report",
+      "subtitle": "Executive Annual Cardiovascular & Metabolic Evaluation",
+      "encounterDate": "22 May 2026",
+      "facility": "Civil Hospital & Research Institute, Ahmedabad",
+      "department": "Cardiology & Internal Medicine",
+      "physician": "Dr. Kirit S. Joshi, MD, DM (Cardio)",
+      "electronicSignature": "DEMO-SIGNATURE-005",
+      "classification": "Historical outpatient medical record. Fictional dataset for testing.",
+      "generalHealth": {
+        "assessment": "Executive checkup. Patient reports good energy levels, brisk walking 45 mins daily, non-smoker, non-drinker. BP well managed on single agent.",
+        "condition": "Good",
+        "consciousness": "Alert and oriented",
+        "mobility": "Fully Independent",
+        "respiratory": "Normal"
+      },
+      "medicalHistory": {
+        "knownCondition": "Essential Hypertension diagnosed at age 47. Renal Doppler and fundoscopy normal.",
+        "cardiacEvaluation": "Treadmill Exercise ECG (TMT) negative for inducible myocardial ischemia at 10.2 METs.",
+        "hospitalization": "None.",
+        "previousSurgeries": "Elective inguinal hernia repair in 2018.",
+        "majorInjuries": "None.",
+        "transfusions": "None."
+      },
+      "currentMedications": [
+        {
+          "medication": "Telmisartan",
+          "dosage": "40 mg",
+          "frequency": "Once daily morning",
+          "purpose": "Hypertension control"
+        }
+      ],
+      "allergies": {
+        "drug": "None reported (NKDA)",
+        "food": "None reported",
+        "other": "None reported"
+      },
+      "baselineVitals": [
+        {
+          "parameter": "Blood Pressure",
+          "value": "124/80 mmHg",
+          "status": "Controlled"
+        },
+        {
+          "parameter": "Heart Rate",
+          "value": "72 BPM",
+          "status": "Normal Sinus"
+        },
+        {
+          "parameter": "SpO2",
+          "value": "99%",
+          "status": "Optimal"
+        },
+        {
+          "parameter": "Temperature",
+          "value": "36.7 °C",
+          "status": "Afebrile"
+        },
+        {
+          "parameter": "Respiratory Rate",
+          "value": "15 /min",
+          "status": "Normal"
+        }
+      ],
+      "cardiacAssessment": {
+        "ecg": "Normal sinus rhythm, 72 BPM. Normal axis, no LVH criteria.",
+        "echo": "Concentric LV remodeling absent; normal systolic function (LVEF 62%). Grade 1 diastolic relaxation impairment (age-consistent).",
+        "findings": "Stable cardiovascular profile.",
+        "ecgDetails": {
+          "rhythm": "Atrial Fibrillation (Controlled)",
+          "rate": "84 BPM",
+          "intervals": "QRS 96 ms, QTc 430 ms",
+          "axis": "Left Axis Deviation",
+          "interpretation": "Chronic AF with controlled ventricular rate."
+        },
+        "echoDetails": {
+          "ejectionFraction": 38,
+          "chamberSizes": "Mildly dilated LV and LA",
+          "valveFindings": "Moderate MR",
+          "wallMotion": "Anterior wall hypokinesia",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 24,
+          "events": [
+            "Baseline rate-controlled Atrial Fibrillation"
+          ]
+        }
+      },
+      "clinicalAssessment": "Hypertension is well controlled on Telmisartan 40mg. Lipid panel within target range (LDL 88 mg/dL). Advised low-salt Mediterranean-style Indian vegetarian diet and annual review."
+    },
+    "postRecord": {
+      "documentId": "DOC-POST-2026-003",
+      "title": "Emergency Trauma & Hospitalization Report",
+      "subtitle": "Pedestrian Road Traffic Incident & Blunt Thoracic Trauma Management",
+      "encounterDates": "15–19 November 2026",
+      "facility": "Civil Hospital & Research Institute, Ahmedabad",
+      "departments": "Trauma Surgery, Pulmonology & Cardiology",
+      "attendingSurgeon": "Dr. Bhupendra Shah, MS (Trauma / Thoracic)",
+      "consultingCardiologist": "Dr. Kirit S. Joshi, MD, DM",
+      "electronicSignature": "DEMO-SIGNATURE-006",
+      "relatedHistoricalRecord": "DOC-PRE-2026-003 (22 May 2026)",
+      "accident": {
+        "incident": "Pedestrian struck by motorized three-wheeler autorickshaw",
+        "date": "15 November 2026",
+        "time": "Approx. 07:45 AM",
+        "location": "SG Highway Crossing, Ahmedabad, Gujarat",
+        "description": "Patient was crossing a zebra marked lane during morning walk and was clipped on the right side by an auto-rickshaw bumper. Sustained direct impact against right lateral rib cage."
+      },
+      "edAssessment": {
+        "arrival": "08:35 AM, 15 November 2026",
+        "chiefComplaints": "Pleuritic right lateral chest wall pain, aggravated by deep inspiration and coughing. Mild breathlessness.",
+        "consciousness": "Conscious, oriented, GCS 15/15",
+        "airway": "Patent and maintained",
+        "circulation": "Hemodynamically stable",
+        "externalBleeding": "Superficial abrasions over right flank, no active hemorrhaging",
+        "headInjury": "No head strike or loss of consciousness"
+      },
+      "initialVitals": [
+        {
+          "parameter": "Blood Pressure",
+          "value": "138/84 mmHg",
+          "status": "Mildly Elevated (Pain / Stress)"
+        },
+        {
+          "parameter": "Heart Rate",
+          "value": "88 BPM",
+          "status": "Normal Sinus"
+        },
+        {
+          "parameter": "SpO2",
+          "value": "96%",
+          "status": "On Room Air"
+        },
+        {
+          "parameter": "Temperature",
+          "value": "36.8 °C",
+          "status": "Afebrile"
+        },
+        {
+          "parameter": "Respiratory Rate",
+          "value": "22 /min",
+          "status": "Tachypneic due to shallow breathing"
+        },
+        {
+          "parameter": "Pain Score",
+          "value": "8 / 10",
+          "status": "Severe Chest Wall Pain"
+        },
+        {
+          "parameter": "Glasgow Coma Scale",
+          "value": "15 / 15",
+          "status": "Alert"
+        }
+      ],
+      "physicalExam": {
+        "rightLimb": "Localized point tenderness and bony crepitus over right 4th and 5th ribs along anterior axillary line. No flail segment. Air entry bilaterally equal; no surgical emphysema detected.",
+        "neurovascular": "All peripheral pulses intact. Neurological exam completely normal.",
+        "systemic": "Abdomen soft, non-tender, bowel sounds active."
+      },
+      "radiology": {
+        "investigation": "Chest CT with Contrast + Digital Chest Radiograph (PA & Oblique)",
+        "date": "15 November 2026",
+        "findings": "Undisplaced fractures of the right 4th and 5th ribs along lateral arch. No pneumothorax, hemothorax, or pulmonary contusion. Normal mediastinal contours.",
+        "impression": "Isolated blunt thoracic trauma with closed undisplaced right 4th and 5th rib fractures without pleural violation.",
+        "studyName": "Chest X-Ray PA & Left Knee AP",
+        "radiologist": "Dr. Meera Nair, MD (Radiology)",
+        "priorComparison": "Mild cardiomegaly unchanged from Aug 2026 baseline.",
+        "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3EChest%20PA%20%2B%20Left%20Knee%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E22%20Nov%202026%20%7C%20Cardiology%20%2B%20Ortho%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EMild%20Cardiomegaly%3B%20No%20Acute%20Pulmonary%20Edema%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
+      },
+      "laboratory": {
+        "cbc": [
+          {
+            "parameter": "Hemoglobin",
+            "value": "11.2",
+            "unit": "g/dL",
+            "referenceRange": "13.0-17.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "34.0",
+            "unit": "%",
+            "referenceRange": "38.0-50.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "RBC",
+            "value": "3.95",
+            "unit": "million/uL",
+            "referenceRange": "4.5-5.9",
+            "status": "Low"
+          },
+          {
+            "parameter": "WBC",
+            "value": "12400",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "High"
+          },
+          {
+            "parameter": "Neutrophils",
+            "value": "76",
+            "unit": "%",
+            "referenceRange": "40-70",
+            "status": "High"
+          },
+          {
+            "parameter": "Lymphocytes",
+            "value": "16",
+            "unit": "%",
+            "referenceRange": "20-40",
+            "status": "Low"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "198000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCV",
+            "value": "86.1",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCH",
+            "value": "28.4",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "32.9",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "14.8",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
+            "status": "High"
+          }
+        ],
+        "electrolytes": [
+          {
+            "parameter": "Sodium",
+            "value": "140 mmol/L",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.1 mmol/L",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Blood Glucose",
+            "value": "108 mg/dL",
+            "status": "Normal"
+          },
+          {
+            "parameter": "ABG (Room Air)",
+            "value": "pH 7.41, PaO2 84 mmHg, PaCO2 38",
+            "status": "Adequate Oxygenation"
+          }
+        ],
+        "dateTime": "2026-11-22 07:45",
+        "coagulation": [
+          {
+            "parameter": "PT",
+            "value": "16.8",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "High"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.5",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "High"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "34.0",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "chemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "198",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "High"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "136",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "5.8",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Critical"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "1.7",
+            "unit": "mg/dL",
+            "referenceRange": "0.7-1.3",
+            "status": "High"
+          },
+          {
+            "parameter": "ALT (SGPT)",
+            "value": "42",
+            "unit": "U/L",
+            "referenceRange": "7-56",
+            "status": "Normal"
+          }
+        ]
+      },
+      "cardiacAssessment": {
+        "ecgDate": "15 November 2026",
+        "ecgFindings": "Normal sinus rhythm, 88 BPM. Serial Troponin-I negative at 0h and 6h ruling out myocardial contusion.",
+        "monitoring": "Continuous SpO2 and rhythm monitoring during inpatient admission.",
+        "ecgDetails": {
+          "rhythm": "Atrial Fibrillation with RVR",
+          "rate": "118 BPM",
+          "intervals": "QRS 98 ms, QTc 445 ms",
+          "axis": "Left Axis Deviation",
+          "interpretation": "AF with rapid ventricular response; rate-control IV diltiazem initiated."
+        },
+        "echoDetails": {
+          "ejectionFraction": 36,
+          "chamberSizes": "Dilated LV/LA",
+          "valveFindings": "Moderate MR, mild TR",
+          "wallMotion": "Global LV hypokinesia",
+          "pericardialEffusion": "Trace"
+        },
+        "telemetry": {
+          "durationHours": 72,
+          "events": [
+            "AF with RVR (118-132 BPM) on Day 1",
+            "Non-sustained VT (4 beats) overnight"
+          ]
+        }
+      },
+      "diagnosis": {
+        "primary": "Closed undisplaced right 4th and 5th rib fractures due to blunt chest trauma",
+        "secondary": "Essential Hypertension",
+        "additional": "Localized intercostal muscle contusion"
+      },
+      "treatment": {
+        "admissionDate": "15 November 2026",
+        "procedureDate": "Conservative Inpatient Management",
+        "procedure": "Multimodal analgesia protocol, incentive spirometry, and respiratory physiotherapy",
+        "details": "Admitted to Step-Down Thoracic unit. Right intercostal nerve block administered with Bupivacaine for initial pain control. Aggressive incentive spirometry (sustained maximal inspiration) to prevent atelectasis.",
+        "postopFindings": "Repeat CXR at 48 hours confirms lungs remain fully expanded without effusion or pneumothorax.",
+        "postopCBC": [
+          {
+            "parameter": "Hemoglobin",
+            "value": "10.8",
+            "unit": "g/dL",
+            "referenceRange": "13.0-17.0",
+            "status": "Low"
+          },
+          {
+            "parameter": "WBC",
+            "value": "10200",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "192000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          }
+        ],
+        "postopDateTime": "2026-11-23 07:30",
+        "postopCoagulation": [
+          {
+            "parameter": "INR",
+            "value": "1.3",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "High"
+          }
+        ],
+        "postopChemistry": [
+          {
+            "parameter": "Potassium",
+            "value": "5.2",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "High"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "1.5",
+            "unit": "mg/dL",
+            "referenceRange": "0.7-1.3",
+            "status": "High"
+          }
+        ]
+      },
+      "dischargeMeds": [
+        {
+          "medication": "Telmisartan",
+          "dose": "40 mg once daily",
+          "purpose": "Hypertension control"
+        },
+        {
+          "medication": "Paracetamol",
+          "dose": "650 mg PO TDS",
+          "purpose": "Scheduled baseline analgesia"
+        },
+        {
+          "medication": "Tramadol + Paracetamol",
+          "dose": "37.5 / 325 mg PO SOS (max 2 tabs/day)",
+          "purpose": "Breakthrough pleuritic pain"
+        },
+        {
+          "medication": "Pantoprazole",
+          "dose": "40 mg once daily before meals",
+          "purpose": "Gastroprotection"
+        }
+      ],
+      "dischargeCondition": {
+        "summary": "Pain controlled, inspiratory volumes > 1,500 mL on spirometry, SpO2 98% on room air. Discharged on 19 November 2026.",
+        "mobility": "Independent walking; advised no heavy lifting or strenuous exertion for 6 weeks.",
+        "date": "19 November 2026"
+      },
+      "followUp": [
+        "Trauma / Thoracic clinic review in 10 days",
+        "Perform incentive spirometry 10 breaths every 2 hours while awake",
+        "Repeat chest X-ray at 3 weeks",
+        "Continue Telmisartan 40mg daily without pause",
+        "Emergency visit if experiencing shortness of breath, sudden chest pain, or coughing up blood"
+      ]
+    },
+    "uploadedDocuments": [
+      {
+        "documentId": "UPL-003-CARDIAC",
+        "title": "72-Hour Holter & Telemetry Strip",
+        "fileName": "PAT-2026-003_Telemetry.pdf",
+        "uploadedBy": "Cardiology ICU",
+        "uploadedAt": "23 Nov 2026, 09:00 AM",
+        "fileType": "application/pdf",
+        "fileSize": "210 KB",
+        "category": "cardiac",
+        "linkedReportId": "DOC-POST-2026-003",
+        "parseStatus": "parsed",
+        "notes": "Telemetry strip showing AF with RVR.",
+        "dataUrl": "/data/reports/PAT-2026-001_Post-Accident_Hospital_Report.pdf"
+      }
+    ]
+  },
+  "PAT-2026-004": {
+    "id": "PAT-2026-004",
+    "name": "Ananya Mukhopadhyay",
+    "age": "35 years",
+    "sex": "Female",
+    "dob": "19 November 1991",
+    "bloodGroup": "B Positive (B+)",
+    "location": "Kolkata, West Bengal, India",
+    "contact": "9830145678",
+    "allergies": [
+      {
+        "name": "Ciprofloxacin (Fluoroquinolones)",
+        "severity": "Severe",
+        "reaction": "Angioedema & facial swelling"
+      }
+    ],
+    "currentConditions": [
+      "Post-operative Left Clavicle Midshaft Fracture (Status Post Open Reduction Internal Fixation with Locking Plate)",
+      "Type 2 Diabetes Mellitus - Well-controlled on Metformin"
+    ],
+    "vitals": [
+      {
+        "name": "Blood Pressure",
+        "value": "120/78",
+        "unit": "mmHg",
+        "status": "Normal",
+        "parameter": "Blood Pressure",
+        "referenceRange": "90-120 / 60-80"
+      },
+      {
+        "name": "Heart Rate",
+        "value": "72",
+        "unit": "BPM",
+        "status": "Normal Sinus",
+        "parameter": "Heart Rate",
+        "referenceRange": "60-100"
+      },
+      {
+        "name": "Oxygen Saturation",
+        "value": "99%",
+        "unit": "SpO2 on Room Air",
+        "status": "Optimal",
+        "parameter": "Oxygen Saturation",
+        "referenceRange": "95-100"
+      },
+      {
+        "name": "Body Temperature",
+        "value": "36.7 °C",
+        "unit": "(98.0 °F)",
+        "status": "Afebrile",
+        "parameter": "Body Temperature",
+        "referenceRange": "36.1-37.2"
+      },
+      {
+        "name": "Respiratory Rate",
+        "value": "15",
+        "unit": "breaths/min",
+        "status": "Eupneic",
+        "parameter": "Respiratory Rate",
+        "referenceRange": "12-20"
+      },
+      {
+        "name": "Pain Score",
+        "value": "1 / 10",
+        "unit": "Numeric Rating Scale",
+        "status": "Minimal / Controlled",
+        "parameter": "Pain Score",
+        "referenceRange": "0-3"
+      }
+    ],
+    "preRecord": {
+      "documentId": "DOC-PRE-2026-004",
+      "title": "Routine Medical Checkup Report",
+      "subtitle": "Comprehensive Annual Metabolic & Glycemic Review",
+      "encounterDate": "14 July 2026",
+      "facility": "Apex Specialty Hospital, Salt Lake, Kolkata",
+      "department": "Endocrinology & Internal Medicine",
+      "physician": "Dr. Subhashish Bose, MD, FICP",
+      "electronicSignature": "DEMO-SIGNATURE-007",
+      "classification": "Historical outpatient medical record. Fictional dataset for testing.",
+      "generalHealth": {
+        "assessment": "Patient attended scheduled diabetes follow-up. Works as a senior software architect. Maintains regular yoga and dietary moderation.",
+        "condition": "Very Good",
+        "consciousness": "Alert and oriented",
+        "mobility": "Independent",
+        "respiratory": "Normal"
+      },
+      "medicalHistory": {
+        "knownCondition": "Type 2 Diabetes Mellitus diagnosed in 2023. Non-insulin dependent.",
+        "cardiacEvaluation": "ECG normal sinus rhythm. No history of angina or palpitations.",
+        "hospitalization": "Elective normal delivery in 2019.",
+        "previousSurgeries": "None.",
+        "majorInjuries": "None.",
+        "transfusions": "None."
+      },
+      "currentMedications": [
+        {
+          "medication": "Metformin Hydrochloride",
+          "dosage": "500 mg",
+          "frequency": "Twice daily after meals",
+          "purpose": "Insulin sensitization & glycemic control"
+        }
+      ],
+      "allergies": {
+        "drug": "Ciprofloxacin (Fluoroquinolones) - Facial angioedema",
+        "food": "None reported",
+        "other": "None reported"
+      },
+      "baselineVitals": [
+        {
+          "parameter": "Blood Pressure",
+          "value": "118/76 mmHg",
+          "status": "Optimal"
+        },
+        {
+          "parameter": "Heart Rate",
+          "value": "70 BPM",
+          "status": "Normal Sinus"
+        },
+        {
+          "parameter": "SpO2",
+          "value": "99%",
+          "status": "Optimal"
+        },
+        {
+          "parameter": "Temperature",
+          "value": "36.6 °C",
+          "status": "Afebrile"
+        },
+        {
+          "parameter": "Respiratory Rate",
+          "value": "14 /min",
+          "status": "Normal"
+        }
+      ],
+      "cardiacAssessment": {
+        "ecg": "Normal sinus rhythm, 70 BPM. No ST-T wave abnormalities.",
+        "echo": "Not clinically indicated.",
+        "findings": "Clear S1 S2, no gallops or murmurs.",
+        "ecgDetails": {
+          "rhythm": "Normal Sinus Rhythm",
+          "rate": "78 BPM",
+          "intervals": "PR 148 ms, QRS 84 ms, QTc 410 ms",
+          "axis": "Normal",
+          "interpretation": "Normal ECG."
+        },
+        "echoDetails": {
+          "ejectionFraction": 60,
+          "chamberSizes": "Normal",
+          "valveFindings": "Normal",
+          "wallMotion": "Normal",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 0,
+          "events": []
+        }
+      },
+      "clinicalAssessment": "Glycemic management is exemplary: HbA1c is 6.3%. Kidney function, urine microalbumin, and retinal screening all negative. Continue Metformin 500mg BD. Routine review in 6 months."
+    },
+    "postRecord": {
+      "documentId": "DOC-POST-2026-004",
+      "title": "Emergency Trauma & Hospitalization Report",
+      "subtitle": "Bicycle-Autorickshaw Collision & Operative Clavicular Stabilization",
+      "encounterDates": "21–23 November 2026",
+      "facility": "Apex Specialty Hospital, Salt Lake, Kolkata",
+      "departments": "Emergency Medicine & Orthopedic Trauma",
+      "attendingSurgeon": "Dr. Debabrata Roy, MS (Ortho)",
+      "consultingCardiologist": "Dr. Subhashish Bose, MD",
+      "electronicSignature": "DEMO-SIGNATURE-008",
+      "relatedHistoricalRecord": "DOC-PRE-2026-004 (14 July 2026)",
+      "accident": {
+        "incident": "Commuter bicycle knocked sideways by speeding autorickshaw",
+        "date": "21 November 2026",
+        "time": "Approx. 08:15 AM",
+        "location": "EM Bypass Junction, Kolkata, West Bengal",
+        "description": "Patient was riding bicycle to work when an autorickshaw took an abrupt left turn, striking the bicycle handlebar. Patient fell directly onto the left shoulder with severe localized crunching sensation."
+      },
+      "edAssessment": {
+        "arrival": "09:00 AM, 21 November 2026",
+        "chiefComplaints": "Severe left shoulder and collarbone pain, localized swelling, and inability to raise left arm.",
+        "consciousness": "Conscious, alert, GCS 15/15",
+        "airway": "Patent and spontaneous",
+        "circulation": "Stable, bilateral radial pulses strong",
+        "externalBleeding": "No skin tenting or open skin laceration",
+        "headInjury": "Wearing bicycle helmet; no head trauma or loss of consciousness"
+      },
+      "initialVitals": [
+        {
+          "parameter": "Blood Pressure",
+          "value": "126/80 mmHg",
+          "status": "Normal"
+        },
+        {
+          "parameter": "Heart Rate",
+          "value": "86 BPM",
+          "status": "Normal Sinus"
+        },
+        {
+          "parameter": "SpO2",
+          "value": "99%",
+          "status": "Optimal"
+        },
+        {
+          "parameter": "Temperature",
+          "value": "36.7 °C",
+          "status": "Afebrile"
+        },
+        {
+          "parameter": "Respiratory Rate",
+          "value": "16 /min",
+          "status": "Normal"
+        },
+        {
+          "parameter": "Pain Score",
+          "value": "8 / 10",
+          "status": "Severe Shoulder Pain"
+        },
+        {
+          "parameter": "Glasgow Coma Scale",
+          "value": "15 / 15",
+          "status": "Alert"
+        }
+      ],
+      "physicalExam": {
+        "rightLimb": "Marked step deformity and tenderness over midshaft of left clavicle. Inferior displacement of lateral fragment. Brachial plexus and upper limb motor/sensory exam completely normal.",
+        "neurovascular": "Left radial and ulnar pulses 2+. Warm extremities, capillary refill < 2s.",
+        "systemic": "No cervical spine tenderness; lung auscultation equal and clear bilaterally."
+      },
+      "radiology": {
+        "investigation": "Digital Radiograph Left Clavicle (AP and 20° Cranial view)",
+        "date": "21 November 2026",
+        "findings": "Comminuted midshaft fracture of the left clavicle with 100% displacement and 18mm shortening of fragments. Subclavian vessels and apical pleura clear.",
+        "impression": "Closed displaced comminuted midshaft left clavicle fracture (Allman Type I / Robinson 2B1).",
+        "studyName": "Chest X-Ray PA View",
+        "radiologist": "Dr. Kavita Iyer, MD (Radiology)",
+        "priorComparison": "Clear lung fields; no focal consolidation.",
+        "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22420%22%20height%3D%22280%22%20viewBox%3D%220%200%20420%20280%22%3E%0A%20%20%20%20%3Crect%20width%3D%22420%22%20height%3D%22280%22%20fill%3D%22%230b1220%22%2F%3E%0A%20%20%20%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22392%22%20height%3D%22252%22%20rx%3D%2210%22%20fill%3D%22%23111b2e%22%20stroke%3D%22%23253654%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22210%22%20y1%3D%2236%22%20x2%3D%22210%22%20y2%3D%22236%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%204%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M185%2048%20C180%2095%2C%20178%20140%2C%20182%20195%20L196%20225%20L224%20225%20L236%20195%20C240%20140%2C%20238%2095%2C%20232%2048%20Z%22%20fill%3D%22%231e293b%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%2F%3E%0A%20%20%20%20%3Cline%20x1%3D%22172%22%20y1%3D%22138%22%20x2%3D%22246%22%20y2%3D%22144%22%20stroke%3D%22%23f43f5e%22%20stroke-width%3D%222.5%22%20stroke-dasharray%3D%225%203%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22210%22%20cy%3D%22141%22%20r%3D%2222%22%20fill%3D%22none%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2236%22%20fill%3D%22%2338bdf8%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%3EPULSECARE%20PACS%20%2F%2F%20DIGITAL%20X-RAY%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2254%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%3EChest%20X-Ray%20PA%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2226%22%20y%3D%2270%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%3E23%20Nov%202026%20%7C%20Respiratory%20Triage%3C%2Ftext%3E%0A%20%20%20%20%3Crect%20x%3D%2226%22%20y%3D%22232%22%20width%3D%22368%22%20height%3D%2222%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%23334155%22%2F%3E%0A%20%20%20%20%3Ctext%20x%3D%2234%22%20y%3D%22247%22%20fill%3D%22%23fbbf24%22%20font-family%3D%22monospace%22%20font-size%3D%2210%22%20font-weight%3D%22bold%22%3EHyperinflated%20Lung%20Fields%3B%20No%20Pneumothorax%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E"
+      },
+      "laboratory": {
+        "cbc": [
+          {
+            "parameter": "Hemoglobin",
+            "value": "13.1",
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Hematocrit",
+            "value": "39.0",
+            "unit": "%",
+            "referenceRange": "36.0-46.0",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RBC",
+            "value": "4.55",
+            "unit": "million/uL",
+            "referenceRange": "4.0-5.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "WBC",
+            "value": "10500",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Eosinophils",
+            "value": "7",
+            "unit": "%",
+            "referenceRange": "1-4",
+            "status": "High"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "280000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCV",
+            "value": "85.7",
+            "unit": "fL",
+            "referenceRange": "80-100",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCH",
+            "value": "28.8",
+            "unit": "pg",
+            "referenceRange": "27-33",
+            "status": "Normal"
+          },
+          {
+            "parameter": "MCHC",
+            "value": "33.6",
+            "unit": "g/dL",
+            "referenceRange": "32-36",
+            "status": "Normal"
+          },
+          {
+            "parameter": "RDW",
+            "value": "12.8",
+            "unit": "%",
+            "referenceRange": "11.5-14.5",
+            "status": "Normal"
+          }
+        ],
+        "electrolytes": [
+          {
+            "parameter": "Sodium",
+            "value": "138 mmol/L",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.3 mmol/L",
+            "status": "Normal"
+          },
+          {
+            "parameter": "HbA1c",
+            "value": "6.4%",
+            "status": "Well Managed T2DM"
+          },
+          {
+            "parameter": "PT / INR",
+            "value": "1.0",
+            "status": "Normal"
+          }
+        ],
+        "dateTime": "2026-11-23 14:20",
+        "coagulation": [
+          {
+            "parameter": "PT",
+            "value": "12.1",
+            "unit": "sec",
+            "referenceRange": "11.0-13.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "INR",
+            "value": "1.0",
+            "unit": "ratio",
+            "referenceRange": "0.8-1.2",
+            "status": "Normal"
+          },
+          {
+            "parameter": "aPTT",
+            "value": "28.5",
+            "unit": "sec",
+            "referenceRange": "25.0-35.0",
+            "status": "Normal"
+          }
+        ],
+        "chemistry": [
+          {
+            "parameter": "Blood Glucose (Random)",
+            "value": "108",
+            "unit": "mg/dL",
+            "referenceRange": "70-140",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Sodium",
+            "value": "139",
+            "unit": "mmol/L",
+            "referenceRange": "135-145",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Potassium",
+            "value": "4.3",
+            "unit": "mmol/L",
+            "referenceRange": "3.5-5.1",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Creatinine",
+            "value": "0.8",
+            "unit": "mg/dL",
+            "referenceRange": "0.6-1.1",
+            "status": "Normal"
+          }
+        ]
+      },
+      "cardiacAssessment": {
+        "ecgDate": "21 November 2026",
+        "ecgFindings": "Normal sinus rhythm, 86 BPM. Preoperative cardiac clearance granted.",
+        "monitoring": "Routine perioperative anesthetic monitoring.",
+        "ecgDetails": {
+          "rhythm": "Sinus Tachycardia",
+          "rate": "104 BPM",
+          "intervals": "PR 142 ms, QRS 84 ms, QTc 416 ms",
+          "axis": "Normal",
+          "interpretation": "Mild sinus tachycardia related to nebulized bronchodilator therapy."
+        },
+        "echoDetails": {
+          "ejectionFraction": 60,
+          "chamberSizes": "Normal",
+          "valveFindings": "Normal",
+          "wallMotion": "Normal",
+          "pericardialEffusion": "None"
+        },
+        "telemetry": {
+          "durationHours": 12,
+          "events": []
+        }
+      },
+      "diagnosis": {
+        "primary": "Closed displaced comminuted midshaft fracture of the left clavicle",
+        "secondary": "Type 2 Diabetes Mellitus, well controlled",
+        "additional": "Acute peri-clavicular soft tissue contusion"
+      },
+      "treatment": {
+        "admissionDate": "21 November 2026",
+        "procedureDate": "21 November 2026, 14:00 HRS",
+        "procedure": "Open Reduction and Internal Fixation (ORIF) with pre-contoured superior anatomical locking compression plate (LCP)",
+        "details": "Under general anesthesia with superficial cervical plexus block. Anatomical reduction obtained, stabilized with a 3.5mm 8-hole pre-contoured clavicle plate. Rigid compression achieved.",
+        "postopFindings": "Check radiographs demonstrate anatomical restoration of clavicular length and alignment. Wound clean and dry.",
+        "postopCBC": [
+          {
+            "parameter": "Hemoglobin",
+            "value": "13.0",
+            "unit": "g/dL",
+            "referenceRange": "12.0-15.5",
+            "status": "Normal"
+          },
+          {
+            "parameter": "WBC",
+            "value": "9200",
+            "unit": "/uL",
+            "referenceRange": "4000-11000",
+            "status": "Normal"
+          },
+          {
+            "parameter": "Platelets",
+            "value": "272000",
+            "unit": "/uL",
+            "referenceRange": "150000-450000",
+            "status": "Normal"
+          }
+        ],
+        "postopDateTime": "2026-11-24 10:00",
+        "postopCoagulation": [],
+        "postopChemistry": []
+      },
+      "dischargeMeds": [
+        {
+          "medication": "Metformin Hydrochloride",
+          "dose": "500 mg PO BD with meals",
+          "purpose": "Continue diabetes control"
+        },
+        {
+          "medication": "Cefuroxime Axetil",
+          "dose": "500 mg PO BD (5 days)",
+          "purpose": "Post-surgical prophylactic antibiotic"
+        },
+        {
+          "medication": "Paracetamol",
+          "dose": "650 mg PO Q8H PRN",
+          "purpose": "Post-operative analgesia"
+        },
+        {
+          "medication": "Pantoprazole",
+          "dose": "40 mg PO once daily before food",
+          "purpose": "Gastroprotection"
+        }
+      ],
+      "dischargeCondition": {
+        "summary": "Afebrile, wound dressing dry and intact, neurovascular status of left arm fully intact. Discharged on 23 November 2026.",
+        "mobility": "Ambulatory with left arm supported in a broad arm sling.",
+        "date": "23 November 2026"
+      },
+      "followUp": [
+        "Orthopedic outpatient visit in 10–12 days for suture removal",
+        "Keep surgical wound dressing clean and dry",
+        "Maintain arm in sling for 3 weeks; begin pendulum shoulder exercises at 2 weeks",
+        "Continue Metformin 500mg BD regularly",
+        "Contact hospital immediately if experiencing fever, wound discharge, or tingling in the left fingers"
+      ]
+    },
+    "uploadedDocuments": []
+  },
+  "PAT-2026-006": {
+    "id": "PAT-2026-006",
+    "name": "sneha kumari",
+    "age": "20",
+    "sex": "Female",
+    "dob": "11 feb 2006",
+    "bloodGroup": "B Positive (B+)",
+    "location": "India",
+    "contact": "7054735426",
+    "isEmergency": false,
+    "assignedDoctorUsername": "doctor_strange",
+    "assignedDoctorName": "Dr. Stephen Strange, MD",
+    "allergies": [
+      {
+        "name": "No Known Drug Allergies (NKDA)",
+        "severity": "None Reported",
+        "reaction": "Documented at intake"
+      }
+    ],
+    "currentConditions": [
+      "PNEMONIA"
+    ],
+    "vitals": [
+      {
+        "name": "Blood Pressure",
+        "parameter": "Blood Pressure",
+        "value": "120/80",
+        "unit": "mmHg",
+        "referenceRange": "90-120 / 60-80",
+        "status": "Normal"
+      },
+      {
+        "name": "Heart Rate",
+        "parameter": "Heart Rate",
+        "value": "78",
+        "unit": "BPM",
+        "referenceRange": "60-100",
+        "status": "Normal Sinus"
+      },
+      {
+        "name": "Oxygen Saturation",
+        "parameter": "Oxygen Saturation",
+        "value": "98%",
+        "unit": "SpO2",
+        "referenceRange": "95-100",
+        "status": "Normal"
+      }
+    ],
+    "uploadedDocuments": [],
+    "createdBy": "Chief Operations Director (Admin)",
+    "createdAt": "27/11/2026, 10:27:58"
+  }
+}

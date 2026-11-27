@@ -1,0 +1,218 @@
+{
+  "auth": {
+    "users": [
+      {
+        "username": "doctor_smith",
+        "password": "123",
+        "role": "Doctor",
+        "name": "Dr. Alistair Smith, MD",
+        "dept": "Chief Medical Officer"
+      },
+      {
+        "username": "doctor_cho",
+        "password": "123",
+        "role": "Doctor",
+        "name": "Dr. Helen Cho, MS (Ortho)",
+        "dept": "Orthopedics & Trauma"
+      },
+      {
+        "username": "doctor_banner",
+        "password": "123",
+        "role": "Doctor",
+        "name": "Dr. Bruce Banner, MD",
+        "dept": "Cardiology & Intensive Care"
+      },
+      {
+        "username": "doctor_palmer",
+        "password": "123",
+        "role": "Doctor",
+        "name": "Dr. Christine Palmer, MD",
+        "dept": "Emergency Medicine"
+      },
+      {
+        "username": "doctor_strange",
+        "password": "123",
+        "role": "Doctor",
+        "name": "Dr. Stephen Strange, MD",
+        "dept": "General Medicine"
+      },
+      {
+        "username": "rec_sarah",
+        "password": "123",
+        "role": "Receptionist",
+        "name": "Sarah Jenkins",
+        "dept": "Central Triage & Front Desk"
+      },
+      {
+        "username": "rec_david",
+        "password": "123",
+        "role": "Receptionist",
+        "name": "David Copper",
+        "dept": "Outpatient Registration Desk"
+      },
+      {
+        "username": "rec_emily",
+        "password": "123",
+        "role": "Receptionist",
+        "name": "Emily Watson",
+        "dept": "Patient Discharge & Billing"
+      },
+      {
+        "username": "emt_rodriguez",
+        "password": "123",
+        "role": "EMT",
+        "name": "Paramedic Marcus Rodriguez",
+        "dept": "Rapid Trauma Response Unit"
+      },
+      {
+        "username": "emt_clara",
+        "password": "123",
+        "role": "EMT",
+        "name": "Clara Oswald, Paramedic",
+        "dept": "Critical Care Ambulance 04"
+      },
+      {
+        "username": "emt_johnson",
+        "password": "123",
+        "role": "EMT",
+        "name": "Lt. Ray Johnson",
+        "dept": "Air Medical & Trauma Evac"
+      },
+      {
+        "username": "admin",
+        "password": "123",
+        "role": "Admin",
+        "name": "Hospital Director Office",
+        "dept": "Executive Hospital Administration"
+      },
+      {
+        "username": "admin_records",
+        "password": "123",
+        "role": "Admin",
+        "name": "Eleanor Vance (Head of Health Informatics)",
+        "dept": "Medical Records & HIM"
+      },
+      {
+        "username": "admin_operations",
+        "password": "123",
+        "role": "Admin",
+        "name": "Chief Operations Director",
+        "dept": "Hospital Bed & Asset Logistics"
+      },
+      {
+        "username": "iron_man",
+        "password": "1234",
+        "role": "Doctor",
+        "name": "Dr. Tony Stark, MD",
+        "dept": "Cardiothoracic Surgery"
+      }
+    ]
+  },
+  "consentPin": "1234",
+  "stats": {
+    "totalBeds": 120,
+    "occupiedBeds": 86,
+    "availableBeds": 34,
+    "admittedToday": 42,
+    "activeAppointments": 18,
+    "emergencyAdmissions": 6
+  },
+  "rooms": [
+    {
+      "room": "ICU-01",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-A",
+      "status": "Occupied",
+      "patient": "Manas Kumar Singh",
+      "id": "PAT-2026-001"
+    },
+    {
+      "room": "ICU-02",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-B",
+      "status": "Occupied",
+      "patient": "Priya Sharma",
+      "id": "PAT-2026-002"
+    },
+    {
+      "room": "ICU-03",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-C",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-101",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-1",
+      "status": "Occupied",
+      "patient": "Rajesh V. Patel",
+      "id": "PAT-2026-003"
+    },
+    {
+      "room": "CARD-201",
+      "ward": "Cardiology Unit",
+      "bed": "BED-1",
+      "status": "Occupied",
+      "patient": "Ananya Mukhopadhyay",
+      "id": "PAT-2026-004"
+    }
+  ],
+  "departments": [
+    {
+      "name": "Emergency Medicine & Trauma",
+      "head": "Dr. Christine Palmer, MD",
+      "doctors": 14,
+      "beds": 24,
+      "status": "High Activity"
+    },
+    {
+      "name": "Orthopedics & Trauma Surgery",
+      "head": "Dr. Helen Cho, MS (Ortho)",
+      "doctors": 8,
+      "beds": 30,
+      "status": "Active"
+    },
+    {
+      "name": "Cardiology & Intensive Care",
+      "head": "Dr. Bruce Banner, MD",
+      "doctors": 10,
+      "beds": 22,
+      "status": "Normal"
+    },
+    {
+      "name": "General Medicine & Dialysis",
+      "head": "Dr. Stephen Strange, MD",
+      "doctors": 12,
+      "beds": 32,
+      "status": "Normal"
+    }
+  ],
+  "appointments": [
+    {
+      "time": "09:30 AM",
+      "patient": "Manas Kumar Singh",
+      "id": "PAT-2026-001",
+      "dept": "Orthopedics",
+      "doctor": "Dr. Helen Cho",
+      "type": "Post-op Follow-up"
+    },
+    {
+      "time": "10:15 AM",
+      "patient": "Priya Sharma",
+      "id": "PAT-2026-002",
+      "dept": "Orthopedics",
+      "doctor": "Dr. Helen Cho",
+      "type": "Cast Review"
+    },
+    {
+      "time": "11:00 AM",
+      "patient": "Rajesh V. Patel",
+      "id": "PAT-2026-003",
+      "dept": "Cardiology",
+      "doctor": "Dr. Bruce Banner",
+      "type": "Cardio-Thoracic Review"
+    }
+  ]
+}
