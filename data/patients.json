@@ -2342,5 +2342,57 @@
     "uploadedDocuments": [],
     "createdBy": "Chief Operations Director (Admin)",
     "createdAt": "27/11/2026, 10:27:58"
+  },
+  "PAT-2026-007": {
+    "id": "PAT-2026-007",
+    "name": "hello",
+    "age": "20 years",
+    "sex": "Male",
+    "dob": "2006-01-27",
+    "bloodGroup": "O Positive (O+)",
+    "location": "India",
+    "contact": "12345678908",
+    "isEmergency": false,
+    "assignedDoctorUsername": "doctor_smith",
+    "assignedDoctorName": "Dr. Alistair Smith, MD",
+    "allergies": [
+      {
+        "name": "No Known Drug Allergies (NKDA)",
+        "severity": "None Reported",
+        "reaction": "Documented at intake"
+      }
+    ],
+    "currentConditions": [
+      "acute chest pain"
+    ],
+    "vitals": [
+      {
+        "name": "Blood Pressure",
+        "parameter": "Blood Pressure",
+        "value": "120/80",
+        "unit": "mmHg",
+        "referenceRange": "90-120 / 60-80",
+        "status": "Normal"
+      },
+      {
+        "name": "Heart Rate",
+        "parameter": "Heart Rate",
+        "value": "78",
+        "unit": "BPM",
+        "referenceRange": "60-100",
+        "status": "Normal Sinus"
+      },
+      {
+        "name": "Oxygen Saturation",
+        "parameter": "Oxygen Saturation",
+        "value": "98%",
+        "unit": "SpO2",
+        "referenceRange": "95-100",
+        "status": "Normal"
+      }
+    ],
+    "uploadedDocuments": [],
+    "createdBy": "Dr. Alistair Smith, MD (Doctor)",
+    "createdAt": "27/11/2026, 22:02:28"
   }
 }
