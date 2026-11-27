@@ -110,9 +110,9 @@
   },
   "consentPin": "1234",
   "stats": {
-    "totalBeds": 120,
-    "occupiedBeds": 86,
-    "availableBeds": 34,
+    "totalBeds": 50,
+    "occupiedBeds": 4,
+    "availableBeds": 46,
     "admittedToday": 42,
     "activeAppointments": 18,
     "emergencyAdmissions": 6
@@ -121,7 +121,7 @@
     {
       "room": "ICU-01",
       "ward": "Intensive Care Unit",
-      "bed": "BED-A",
+      "bed": "BED-01",
       "status": "Occupied",
       "patient": "Manas Kumar Singh",
       "id": "PAT-2026-001"
@@ -129,7 +129,7 @@
     {
       "room": "ICU-02",
       "ward": "Intensive Care Unit",
-      "bed": "BED-B",
+      "bed": "BED-02",
       "status": "Occupied",
       "patient": "Priya Sharma",
       "id": "PAT-2026-002"
@@ -137,7 +137,143 @@
     {
       "room": "ICU-03",
       "ward": "Intensive Care Unit",
-      "bed": "BED-C",
+      "bed": "BED-03",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ICU-04",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-04",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ICU-05",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-05",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ICU-06",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-06",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ICU-07",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-07",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ICU-08",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-08",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ICU-09",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-09",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ICU-10",
+      "ward": "Intensive Care Unit",
+      "bed": "BED-10",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-01",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-01",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-02",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-02",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-03",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-03",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-04",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-04",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-05",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-05",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-06",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-06",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-07",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-07",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-08",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-08",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-09",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-09",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ER-10",
+      "ward": "Emergency & Trauma Bay",
+      "bed": "BAY-10",
       "status": "Available",
       "patient": "—",
       "id": "—"
@@ -151,12 +287,236 @@
       "id": "PAT-2026-003"
     },
     {
+      "room": "ORTHO-102",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-2",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-103",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-3",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-104",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-4",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-105",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-5",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-106",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-6",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-107",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-7",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-108",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-8",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-109",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-9",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "ORTHO-110",
+      "ward": "Orthopedic Surgery",
+      "bed": "BED-10",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
       "room": "CARD-201",
       "ward": "Cardiology Unit",
       "bed": "BED-1",
       "status": "Occupied",
       "patient": "Ananya Mukhopadhyay",
       "id": "PAT-2026-004"
+    },
+    {
+      "room": "CARD-202",
+      "ward": "Cardiology Unit",
+      "bed": "BED-2",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "CARD-203",
+      "ward": "Cardiology Unit",
+      "bed": "BED-3",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "CARD-204",
+      "ward": "Cardiology Unit",
+      "bed": "BED-4",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "CARD-205",
+      "ward": "Cardiology Unit",
+      "bed": "BED-5",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "CARD-206",
+      "ward": "Cardiology Unit",
+      "bed": "BED-6",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "CARD-207",
+      "ward": "Cardiology Unit",
+      "bed": "BED-7",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "CARD-208",
+      "ward": "Cardiology Unit",
+      "bed": "BED-8",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "CARD-209",
+      "ward": "Cardiology Unit",
+      "bed": "BED-9",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "CARD-210",
+      "ward": "Cardiology Unit",
+      "bed": "BED-10",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-301",
+      "ward": "General Medicine Ward",
+      "bed": "BED-1",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-302",
+      "ward": "General Medicine Ward",
+      "bed": "BED-2",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-303",
+      "ward": "General Medicine Ward",
+      "bed": "BED-3",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-304",
+      "ward": "General Medicine Ward",
+      "bed": "BED-4",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-305",
+      "ward": "General Medicine Ward",
+      "bed": "BED-5",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-306",
+      "ward": "General Medicine Ward",
+      "bed": "BED-6",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-307",
+      "ward": "General Medicine Ward",
+      "bed": "BED-7",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-308",
+      "ward": "General Medicine Ward",
+      "bed": "BED-8",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-309",
+      "ward": "General Medicine Ward",
+      "bed": "BED-9",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
+    },
+    {
+      "room": "GEN-310",
+      "ward": "General Medicine Ward",
+      "bed": "BED-10",
+      "status": "Available",
+      "patient": "—",
+      "id": "—"
     }
   ],
   "departments": [
